@@ -176,19 +176,23 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:24px 0}
   </div>
   <div class="fg"><label class="lbl">Regime tributário atual <span class="ob">*</span></label>
     <div class="og">
-      <div class="oc"><input type="radio" name="regime" id="r_s" value="Simples Nacional"><label for="r_s">Simples Nacional</label></div>
-      <div class="oc"><input type="radio" name="regime" id="r_p" value="Lucro Presumido"><label for="r_p">Lucro Presumido</label></div>
-      <div class="oc"><input type="radio" name="regime" id="r_r" value="Lucro Real"><label for="r_r">Lucro Real</label></div>
-      <div class="oc"><input type="radio" name="regime" id="r_ns" value="Não sei"><label for="r_ns">Não sei informar</label></div>
+      <div class="oc"><input type="radio" name="regime" id="r_s" value="Simples Nacional" onclick="togglePisCofins()"><label for="r_s">Simples Nacional</label></div>
+      <div class="oc"><input type="radio" name="regime" id="r_p" value="Lucro Presumido" onclick="togglePisCofins()"><label for="r_p">Lucro Presumido</label></div>
+      <div class="oc"><input type="radio" name="regime" id="r_r" value="Lucro Real" onclick="togglePisCofins()"><label for="r_r">Lucro Real</label></div>
+      <div class="oc"><input type="radio" name="regime" id="r_ns" value="Não sei" onclick="togglePisCofins()"><label for="r_ns">Não sei informar</label></div>
     </div>
   </div>
-  <div class="fg"><label class="lbl">Regime de PIS/COFINS <span class="ob">*</span><span class="ht">Lucro Presumido → geralmente cumulativo; Lucro Real → geralmente não-cumulativo</span></label>
+  <div class="fg" id="bloco_piscofins">
+    <label class="lbl">Regime de PIS/COFINS <span class="ob">*</span><span class="ht">Lucro Presumido → geralmente cumulativo; Lucro Real → geralmente não-cumulativo</span></label>
     <div class="og">
       <div class="oc"><input type="radio" name="piscofins" id="pc_c" value="Cumulativo (3,65%)"><label for="pc_c">Cumulativo — 3,65%<br><small style="font-weight:300;font-size:.76rem;color:#888">Sem direito a crédito</small></label></div>
       <div class="oc"><input type="radio" name="piscofins" id="pc_n" value="Não Cumulativo (9,25%)"><label for="pc_n">Não Cumulativo — 9,25%<br><small style="font-weight:300;font-size:.76rem;color:#888">Com direito a crédito</small></label></div>
       <div class="oc"><input type="radio" name="piscofins" id="pc_m" value="Misto"><label for="pc_m">Misto<br><small style="font-weight:300;font-size:.76rem;color:#888">Detalhar nas observações</small></label></div>
       <div class="oc"><input type="radio" name="piscofins" id="pc_ns" value="Não sei"><label for="pc_ns">Não sei informar</label></div>
     </div>
+  </div>
+  <div class="callout" id="aviso_simples" style="display:none">
+    No <strong>Simples Nacional</strong>, o PIS e COFINS já estão incluídos na guia única do Simples — não há recolhimento separado nem direito a crédito nesse regime. Este campo não se aplica.
   </div>
   <div class="fg"><label class="lbl">Possui benefício fiscal vigente? <span class="ob">*</span><span class="ht">ICMS reduzido, crédito presumido, isenção, regime especial estadual/municipal</span></label>
     <div class="og2">
@@ -558,6 +562,22 @@ async function enviar() {
     mostrarErro('Erro ao enviar. Verifique sua conexão e tente novamente. ('+e.message+')');
     btn.disabled=false;
     btn.textContent='Enviar Questionário ✓';
+  }
+}
+
+function togglePisCofins() {
+  const regime = document.querySelector('input[name="regime"]:checked');
+  const bloco = document.getElementById('bloco_piscofins');
+  const aviso = document.getElementById('aviso_simples');
+  if (!regime) return;
+  if (regime.value === 'Simples Nacional') {
+    bloco.style.display = 'none';
+    aviso.style.display = 'block';
+    // Limpa seleção anterior de piscofins
+    document.querySelectorAll('input[name="piscofins"]').forEach(r => r.checked = false);
+  } else {
+    bloco.style.display = 'block';
+    aviso.style.display = 'none';
   }
 }
 
