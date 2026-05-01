@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico Reforma Tributária — Zaroni Advogados</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap');
+:root{
+  --v:#6B1E2E;--ve:#4a1420;--vc:#8a2540;
+  --o:#C9A84C;--oc:#e0c27a;
+  --cr:#F9F5EE;--ce:#ede8de;
+  --t:#2c1a10;--tl:#6b5c4e;--b:#d8cfc2;--w:#ffffff;
+  --serif:'Playfair Display',Georgia,'Times New Roman',serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--cr);color:var(--t);min-height:100vh}
+header{background:var(--ve);padding:24px 44px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--o)}
+.brand{color:var(--o);font-family:var(--serif);font-size:1.4rem;letter-spacing:.07em;font-weight:500}
+.brand-sub{color:rgba(201,168,76,.5);font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;margin-top:3px}
+.meta{text-align:right;font-size:.7rem;color:rgba(255,255,255,.38);line-height:1.9}
+.pw{background:var(--ve);padding:0 44px 16px}
+.pt{height:2px;background:rgba(201,168,76,.18);border-radius:2px}
+.pf{height:100%;background:var(--o);border-radius:2px;transition:width .4s ease}
+.ps{display:flex;justify-content:space-between;margin-top:9px}
+.sd{display:flex;flex-direction:column;align-items:center;gap:4px}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(201,168,76,.22);transition:background .3s}
+.sd.active .dot,.sd.done .dot{background:var(--o)}
+.sl{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(201,168,76,.32);white-space:nowrap}
+.sd.active .sl,.sd.done .sl{color:var(--oc)}
+main{max-width:780px;margin:0 auto;padding:44px 28px 80px}
+.sec{display:none;animation:fu .35s ease}
+.sec.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.sh{margin-bottom:32px;padding-bottom:16px;border-bottom:1px solid var(--b)}
+.sn{font-size:.63rem;letter-spacing:.28em;text-transform:uppercase;color:var(--o);margin-bottom:7px}
+.st{font-family:var(--serif);font-size:1.9rem;font-weight:500;color:var(--v);line-height:1.2;margin-bottom:8px}
+.sd2{font-size:.86rem;color:var(--tl);line-height:1.72;max-width:560px}
+.fg{margin-bottom:24px}
+.lbl{display:block;font-size:.79rem;font-weight:500;color:var(--t);margin-bottom:6px;font-family:var(--serif)}
+.ob{color:var(--v)}
+.ht{font-weight:300;color:var(--tl);font-size:.74rem;display:block;margin-top:2px}
+input[type=text],input[type=email],input[type=tel],select,textarea{
+  width:100%;padding:10px 14px;border:1px solid var(--b);border-radius:4px;
+  background:var(--w);font-family:var(--sans);font-size:.86rem;color:var(--t);
+  transition:border-color .2s,box-shadow .2s;appearance:none;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--vc);box-shadow:0 0 0 3px rgba(107,30,46,.08)}
+textarea{resize:vertical;min-height:86px;line-height:1.6}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%236B1E2E' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.og{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:4px}
+.og2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.og3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:4px}
+.oc{position:relative}
+.oc input{position:absolute;opacity:0;width:0;height:0}
+.oc label{display:flex;align-items:flex-start;gap:8px;padding:12px 14px;border:1px solid var(--b);border-radius:4px;background:var(--w);cursor:pointer;font-size:.82rem;color:var(--t);transition:all .15s;line-height:1.4;margin:0}
+.oc label:hover{border-color:var(--vc);background:#fdf8f5}
+.oc input:checked+label{border-color:var(--v);background:#faf0f2;color:var(--ve);font-weight:500}
+.oc label::before{content:'';width:14px;height:14px;border-radius:50%;border:1.5px solid var(--b);flex-shrink:0;margin-top:2px;transition:all .15s}
+.oc.ck label::before{border-radius:3px}
+.oc input:checked+label::before{background:var(--v);border-color:var(--v);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='7'%3E%3Cpath d='M1 3.5l2 2L8 1' stroke='white' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:center}
+hr.dv{border:none;border-top:1px solid var(--b);margin:24px 0}
+.sub{font-family:var(--serif);font-size:1.05rem;font-weight:500;color:var(--v);margin:24px 0 14px}
+.callout{background:#fdf5f0;border-left:3px solid var(--o);padding:13px 17px;border-radius:0 4px 4px 0;font-size:.8rem;color:var(--tl);line-height:1.65;margin-bottom:24px}
+.callout strong{color:var(--t)}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:22px;border-top:1px solid var(--b)}
+.btn{padding:11px 28px;border-radius:3px;font-family:var(--sans);font-size:.77rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:none;transition:all .18s}
+.bo{background:transparent;border:1px solid var(--b);color:var(--tl)}
+.bo:hover{border-color:var(--vc);color:var(--v)}
+.bp{background:var(--v);color:var(--w)}
+.bp:hover{background:var(--ve)}
+.bg{background:var(--o);color:var(--ve);font-weight:600}
+.bg:hover{background:var(--oc)}
+.bg:disabled{opacity:.6;cursor:not-allowed}
+.success{text-align:center;padding:60px 32px;background:var(--w);border:1px solid var(--b);border-radius:8px;max-width:520px;margin:60px auto}
+.success h2{font-family:var(--serif);font-size:1.6rem;color:var(--v);margin:16px 0 12px}
+.success p{font-size:.87rem;color:var(--tl);line-height:1.7}
+.erro{background:#fdf0f0;border:1px solid #e0b0b0;border-radius:4px;padding:12px 16px;color:#8b2020;font-size:.82rem;margin-bottom:16px}
+@media(max-width:600px){
+  header{padding:18px 20px;flex-direction:column;gap:10px;text-align:center}
+  main{padding:28px 16px 60px}
+  .row,.og2,.og3{grid-template-columns:1fr}
+  .pw{padding:0 20px 14px}
+  .sl{display:none}
+  .st{font-size:1.5rem}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="brand">Zaroni Advogados</div>
+    <div class="brand-sub">OAB/RJ 105.247 · Rio de Janeiro &amp; São Paulo</div>
+  </div>
+  <div class="meta">
+    <div>Diagnóstico — Reforma Tributária</div>
+    <div>Questionário de Intake</div>
+    <div id="dataHoje"></div>
+  </div>
+</header>
+
+<div class="pw">
+  <div class="pt"><div class="pf" id="pf" style="width:14.28%"></div></div>
+  <div class="ps">
+    <div class="sd active"><div class="dot"></div><span class="sl">Identificação</span></div>
+    <div class="sd"><div class="dot"></div><span class="sl">Regime</span></div>
+    <div class="sd"><div class="dot"></div><span class="sl">Operação</span></div>
+    <div class="sd"><div class="dot"></div><span class="sl">Fornecedores</span></div>
+    <div class="sd"><div class="dot"></div><span class="sl">Clientes</span></div>
+    <div class="sd"><div class="dot"></div><span class="sl">Contratos</span></div>
+    <div class="sd"><div class="dot"></div><span class="sl">Envio</span></div>
+  </div>
+</div>
+
+<main>
+
+<!-- ══ TELA DE SUCESSO (hidden) ══ -->
+<div class="success" id="tela-sucesso" style="display:none">
+  <div style="font-size:2.8rem">✅</div>
+  <h2>Questionário enviado com sucesso</h2>
+  <p>Obrigado. Suas respostas foram recebidas pelo escritório <strong>Zaroni Advogados</strong> e serão analisadas em breve. Entraremos em contato pelo e-mail informado com o diagnóstico preliminar.</p>
+</div>
+
+<!-- ══ S0 IDENTIFICAÇÃO ══ -->
+<div class="sec active" id="s0">
+  <div class="sh">
+    <div class="sn">Seção 01 / 07</div>
+    <h2 class="st">Identificação da Empresa</h2>
+    <p class="sd2">Dados cadastrais e de contato. Todas as informações são tratadas com estrita confidencialidade pelo escritório Zaroni Advogados.</p>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">Razão Social <span class="ob">*</span></label><input type="text" id="razao" placeholder="Nome completo da pessoa jurídica"></div>
+    <div class="fg"><label class="lbl">Nome Fantasia</label><input type="text" id="fantasia" placeholder="Se diferente da razão social"></div>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">CNPJ <span class="ob">*</span></label><input type="text" id="cnpj" placeholder="00.000.000/0000-00"></div>
+    <div class="fg"><label class="lbl">Estado de sede <span class="ob">*</span></label>
+      <select id="estado"><option value="">Selecione</option><option>AC</option><option>AL</option><option>AP</option><option>AM</option><option>BA</option><option>CE</option><option>DF</option><option>ES</option><option>GO</option><option>MA</option><option>MT</option><option>MS</option><option>MG</option><option>PA</option><option>PB</option><option>PR</option><option>PE</option><option>PI</option><option>RJ</option><option>RN</option><option>RS</option><option>RO</option><option>RR</option><option>SC</option><option>SP</option><option>SE</option><option>TO</option></select>
+    </div>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">Responsável pelo contato <span class="ob">*</span></label><input type="text" id="contato" placeholder="Nome completo"></div>
+    <div class="fg"><label class="lbl">Cargo</label><input type="text" id="cargo" placeholder="Ex.: CFO, Diretor Financeiro"></div>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">E-mail <span class="ob">*</span></label><input type="email" id="email" placeholder="contato@empresa.com.br"></div>
+    <div class="fg"><label class="lbl">Telefone</label><input type="tel" id="tel" placeholder="(00) 00000-0000"></div>
+  </div>
+  <hr class="dv">
+  <p class="sub">Porte e estrutura</p>
+  <div class="row">
+    <div class="fg"><label class="lbl">Faturamento bruto anual aproximado <span class="ob">*</span></label>
+      <select id="faturamento"><option value="">Selecione</option><option>Até R$ 360 mil (MEI)</option><option>R$ 360 mil – R$ 4,8 mi (Simples)</option><option>R$ 4,8 mi – R$ 20 mi</option><option>R$ 20 mi – R$ 100 mi</option><option>Acima de R$ 100 mi</option></select>
+    </div>
+    <div class="fg"><label class="lbl">Número de funcionários</label>
+      <select id="funcionarios"><option value="">Selecione</option><option>Até 10</option><option>11 – 50</option><option>51 – 200</option><option>201 – 1.000</option><option>Acima de 1.000</option></select>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Mais de um CNPJ (grupo econômico)?</label>
+    <div class="og2">
+      <div class="oc"><input type="radio" name="grupo" id="g_s" value="Sim"><label for="g_s">Sim — detalhar nas observações</label></div>
+      <div class="oc"><input type="radio" name="grupo" id="g_n" value="Não"><label for="g_n">Não — CNPJ único</label></div>
+    </div>
+  </div>
+  <div class="nav"><span></span><button class="btn bp" onclick="ir(1)">Próximo →</button></div>
+</div>
+
+<!-- ══ S1 REGIME ══ -->
+<div class="sec" id="s1">
+  <div class="sh">
+    <div class="sn">Seção 02 / 07</div>
+    <h2 class="st">Regime Tributário Atual</h2>
+    <p class="sd2">O regime de apuração vigente é o ponto de partida do diagnóstico — determina o que muda e o que sua empresa pode ganhar com a reforma.</p>
+  </div>
+  <div class="fg"><label class="lbl">Regime tributário atual <span class="ob">*</span></label>
+    <div class="og">
+      <div class="oc"><input type="radio" name="regime" id="r_s" value="Simples Nacional"><label for="r_s">Simples Nacional</label></div>
+      <div class="oc"><input type="radio" name="regime" id="r_p" value="Lucro Presumido"><label for="r_p">Lucro Presumido</label></div>
+      <div class="oc"><input type="radio" name="regime" id="r_r" value="Lucro Real"><label for="r_r">Lucro Real</label></div>
+      <div class="oc"><input type="radio" name="regime" id="r_ns" value="Não sei"><label for="r_ns">Não sei informar</label></div>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Regime de PIS/COFINS <span class="ob">*</span><span class="ht">Lucro Presumido → geralmente cumulativo; Lucro Real → geralmente não-cumulativo</span></label>
+    <div class="og">
+      <div class="oc"><input type="radio" name="piscofins" id="pc_c" value="Cumulativo (3,65%)"><label for="pc_c">Cumulativo — 3,65%<br><small style="font-weight:300;font-size:.76rem;color:#888">Sem direito a crédito</small></label></div>
+      <div class="oc"><input type="radio" name="piscofins" id="pc_n" value="Não Cumulativo (9,25%)"><label for="pc_n">Não Cumulativo — 9,25%<br><small style="font-weight:300;font-size:.76rem;color:#888">Com direito a crédito</small></label></div>
+      <div class="oc"><input type="radio" name="piscofins" id="pc_m" value="Misto"><label for="pc_m">Misto<br><small style="font-weight:300;font-size:.76rem;color:#888">Detalhar nas observações</small></label></div>
+      <div class="oc"><input type="radio" name="piscofins" id="pc_ns" value="Não sei"><label for="pc_ns">Não sei informar</label></div>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Possui benefício fiscal vigente? <span class="ob">*</span><span class="ht">ICMS reduzido, crédito presumido, isenção, regime especial estadual/municipal</span></label>
+    <div class="og2">
+      <div class="oc"><input type="radio" name="beneficio" id="b_s" value="Sim"><label for="b_s">Sim</label></div>
+      <div class="oc"><input type="radio" name="beneficio" id="b_n" value="Não"><label for="b_n">Não / Desconheço</label></div>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Se sim, descreva o benefício<span class="ht">Ex.: ICMS reduzido a 4% nas importações, crédito presumido estadual…</span></label>
+    <textarea id="beneficio_desc" placeholder="Descreva o benefício e o tributo correspondente"></textarea>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">Recolhe ISS?</label>
+      <div class="og2"><div class="oc"><input type="radio" name="iss" id="iss_s" value="Sim"><label for="iss_s">Sim</label></div><div class="oc"><input type="radio" name="iss" id="iss_n" value="Não"><label for="iss_n">Não</label></div></div>
+    </div>
+    <div class="fg"><label class="lbl">Recolhe ICMS?</label>
+      <div class="og2"><div class="oc"><input type="radio" name="icms" id="icms_s" value="Sim"><label for="icms_s">Sim</label></div><div class="oc"><input type="radio" name="icms" id="icms_n" value="Não"><label for="icms_n">Não</label></div></div>
+    </div>
+  </div>
+  <div class="nav"><button class="btn bo" onclick="ir(0)">← Anterior</button><button class="btn bp" onclick="ir(2)">Próximo →</button></div>
+</div>
+
+<!-- ══ S2 OPERAÇÃO ══ -->
+<div class="sec" id="s2">
+  <div class="sh">
+    <div class="sn">Seção 03 / 07</div>
+    <h2 class="st">Natureza da Operação</h2>
+    <p class="sd2">Compreensão do modelo de negócio e da estrutura de custos — base para identificar créditos elegíveis e vedações legais após a reforma.</p>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">Setor principal <span class="ob">*</span></label>
+      <select id="setor"><option value="">Selecione</option><option>Comércio (revenda de mercadorias)</option><option>Indústria / Manufatura</option><option>Prestação de Serviços</option><option>Serviços e Comércio (misto)</option><option>Agronegócio</option><option>Saúde</option><option>Educação</option><option>Tecnologia / Software / SaaS</option><option>Logística e Transporte</option><option>Construção Civil</option><option>Imobiliário / Incorporação</option><option>Financeiro / Seguros</option><option>Petróleo, Gás e Energia</option><option>Aviação / Transporte Aéreo</option><option>Outro</option></select>
+    </div>
+    <div class="fg"><label class="lbl">Margem bruta aproximada <span class="ob">*</span></label>
+      <select id="margem"><option value="">Selecione</option><option value="5">Abaixo de 10%</option><option value="15">10% – 20%</option><option value="27">20% – 35%</option><option value="42">35% – 50%</option><option value="60">Acima de 50%</option></select>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Descreva brevemente o que a empresa vende ou produz <span class="ob">*</span></label>
+    <textarea id="descricao" placeholder="Ex.: distribuição de peças importadas; software de gestão SaaS; serviços de manutenção aeronáutica…"></textarea>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">Realiza importação? <span class="ob">*</span></label>
+      <div class="og3">
+        <div class="oc"><input type="radio" name="importacao" id="imp_s" value="Sim — regularmente"><label for="imp_s">Sim — regularmente</label></div>
+        <div class="oc"><input type="radio" name="importacao" id="imp_o" value="Sim — ocasionalmente"><label for="imp_o">Sim — ocasionalmente</label></div>
+        <div class="oc"><input type="radio" name="importacao" id="imp_n" value="Não"><label for="imp_n">Não</label></div>
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">Realiza exportação?</label>
+      <div class="og2"><div class="oc"><input type="radio" name="exportacao" id="exp_s" value="Sim"><label for="exp_s">Sim</label></div><div class="oc"><input type="radio" name="exportacao" id="exp_n" value="Não"><label for="exp_n">Não</label></div></div>
+    </div>
+  </div>
+  <hr class="dv">
+  <p class="sub">Principais insumos e custos operacionais</p>
+  <div class="callout"><strong>Por que isso importa:</strong> a partir de 2027 a maioria dos insumos gera crédito de IBS/CBS. Porém <strong>hospedagem e alimentação</strong> estão expressamente vedadas na LC 214/2024.</div>
+  <div class="fg"><label class="lbl">Selecione os principais insumos / custos <span class="ob">*</span><span class="ht">Marque todos que representem parcela relevante do custo total</span></label>
+    <div class="og">
+      <div class="oc ck"><input type="checkbox" id="ins_merc" name="insumos" value="Mercadorias para revenda"><label for="ins_merc">Mercadorias para revenda</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_mp" name="insumos" value="Matéria-prima / insumos"><label for="ins_mp">Matéria-prima / insumos</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_comb" name="insumos" value="Combustível"><label for="ins_comb">Combustível</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_hosp" name="insumos" value="Hospedagem"><label for="ins_hosp">Hospedagem ⚠</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_alim" name="insumos" value="Alimentação"><label for="ins_alim">Alimentação ⚠</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_viag" name="insumos" value="Passagens / transporte"><label for="ins_viag">Passagens / transporte</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_tec" name="insumos" value="Tecnologia / licenças"><label for="ins_tec">Tecnologia / licenças</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_serv" name="insumos" value="Serviços de terceiros"><label for="ins_serv">Serviços de terceiros</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_ativo" name="insumos" value="Aquisição de ativos"><label for="ins_ativo">Aquisição de ativos</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_alug" name="insumos" value="Aluguéis"><label for="ins_alug">Aluguéis</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_folha" name="insumos" value="Folha de pagamento"><label for="ins_folha">Folha de pagamento</label></div>
+      <div class="oc ck"><input type="checkbox" id="ins_out" name="insumos" value="Outros"><label for="ins_out">Outros</label></div>
+    </div>
+  </div>
+  <div class="nav"><button class="btn bo" onclick="ir(1)">← Anterior</button><button class="btn bp" onclick="ir(3)">Próximo →</button></div>
+</div>
+
+<!-- ══ S3 FORNECEDORES ══ -->
+<div class="sec" id="s3">
+  <div class="sh">
+    <div class="sn">Seção 04 / 07</div>
+    <h2 class="st">Cadeia de Fornecedores</h2>
+    <p class="sd2">O regime tributário dos fornecedores determina se a empresa conseguirá tomar crédito nas aquisições — uma das maiores mudanças práticas da reforma.</p>
+  </div>
+  <div class="callout"><strong>Contexto:</strong> fornecedores no Simples Nacional que não optarem pelo regime híbrido não gerarão crédito de IBS/CBS, elevando o custo efetivo das aquisições.</div>
+  <div class="fg"><label class="lbl">Perfil predominante dos fornecedores <span class="ob">*</span></label>
+    <div class="og">
+      <div class="oc"><input type="radio" name="perf_forn" id="pf_g" value="Grandes (Lucro Real/Presumido)"><label for="pf_g">Grandes empresas<br><small style="font-weight:300;font-size:.76rem;color:#888">Lucro Real / Presumido</small></label></div>
+      <div class="oc"><input type="radio" name="perf_forn" id="pf_m" value="Misto"><label for="pf_m">Misto<br><small style="font-weight:300;font-size:.76rem;color:#888">Grandes e pequenas</small></label></div>
+      <div class="oc"><input type="radio" name="perf_forn" id="pf_s" value="Predominantemente Simples"><label for="pf_s">Predom. Simples<br><small style="font-weight:300;font-size:.76rem;color:#888">Pequenas empresas</small></label></div>
+      <div class="oc"><input type="radio" name="perf_forn" id="pf_ns" value="Não sei"><label for="pf_ns">Não sei informar</label></div>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Existe fornecedor crítico no Simples Nacional de difícil substituição? <span class="ob">*</span></label>
+    <div class="og2"><div class="oc"><input type="radio" name="forn_crit" id="fc_s" value="Sim"><label for="fc_s">Sim</label></div><div class="oc"><input type="radio" name="forn_crit" id="fc_n" value="Não"><label for="fc_n">Não / Não sei</label></div></div>
+  </div>
+  <div class="fg"><label class="lbl">Se sim, descreva brevemente</label>
+    <textarea id="forn_crit_desc" placeholder="Tipo de serviço/produto, criticidade, alternativas disponíveis…"></textarea>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">Há fornecedores do exterior?</label>
+      <div class="og2"><div class="oc"><input type="radio" name="forn_ext" id="fe_s" value="Sim"><label for="fe_s">Sim</label></div><div class="oc"><input type="radio" name="forn_ext" id="fe_n" value="Não"><label for="fe_n">Não</label></div></div>
+    </div>
+    <div class="fg"><label class="lbl">Critério atual de seleção de fornecedores</label>
+      <div class="og2">
+        <div class="oc"><input type="radio" name="crit_forn" id="cf_p" value="Menor preço bruto"><label for="cf_p">Menor preço bruto</label></div>
+        <div class="oc"><input type="radio" name="crit_forn" id="cf_o" value="Outros critérios"><label for="cf_o">Outros critérios</label></div>
+      </div>
+    </div>
+  </div>
+  <div class="nav"><button class="btn bo" onclick="ir(2)">← Anterior</button><button class="btn bp" onclick="ir(4)">Próximo →</button></div>
+</div>
+
+<!-- ══ S4 CLIENTES ══ -->
+<div class="sec" id="s4">
+  <div class="sh">
+    <div class="sn">Seção 05 / 07</div>
+    <h2 class="st">Cadeia de Clientes</h2>
+    <p class="sd2">O perfil dos clientes determina o impacto da reforma na precificação, nas margens e nas negociações contratuais.</p>
+  </div>
+  <div class="fg"><label class="lbl">A empresa vende predominantemente para: <span class="ob">*</span></label>
+    <div class="og">
+      <div class="oc"><input type="radio" name="b2x" id="b2b" value="B2B — outras empresas"><label for="b2b">B2B — outras empresas</label></div>
+      <div class="oc"><input type="radio" name="b2x" id="b2c" value="B2C — consumidor final"><label for="b2c">B2C — consumidor final</label></div>
+      <div class="oc"><input type="radio" name="b2x" id="b2g" value="B2G — setor público"><label for="b2g">B2G — setor público</label></div>
+      <div class="oc"><input type="radio" name="b2x" id="b2mix" value="Misto"><label for="b2mix">Misto</label></div>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Os principais clientes tomam crédito de PIS/COFINS hoje? <span class="ob">*</span></label>
+    <div class="og">
+      <div class="oc"><input type="radio" name="cli_cred" id="cc_s" value="Sim — maioria toma"><label for="cc_s">Sim — maioria toma crédito</label></div>
+      <div class="oc"><input type="radio" name="cli_cred" id="cc_p" value="Parte toma, parte não"><label for="cc_p">Parte toma, parte não</label></div>
+      <div class="oc"><input type="radio" name="cli_cred" id="cc_n" value="Não / consumidor final"><label for="cc_n">Não / consumidor final</label></div>
+      <div class="oc"><input type="radio" name="cli_cred" id="cc_ns" value="Não sei"><label for="cc_ns">Não sei informar</label></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">Existe cliente com mais de 30% da receita? <span class="ob">*</span></label>
+      <div class="og2"><div class="oc"><input type="radio" name="cli_conc" id="clc_s" value="Sim"><label for="clc_s">Sim</label></div><div class="oc"><input type="radio" name="cli_conc" id="clc_n" value="Não — base diversificada"><label for="clc_n">Não — base diversificada</label></div></div>
+    </div>
+    <div class="fg"><label class="lbl">Emite nota de reembolso de despesas?<span class="ht">Combustível, passagens, hospedagem cobrados separados</span></label>
+      <div class="og2"><div class="oc"><input type="radio" name="reembolso" id="rem_s" value="Sim"><label for="rem_s">Sim</label></div><div class="oc"><input type="radio" name="reembolso" id="rem_n" value="Não"><label for="rem_n">Não</label></div></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="fg"><label class="lbl">Prazo médio de recebimento <span class="ob">*</span><span class="ht">Impacto do split payment no fluxo de caixa</span></label>
+      <select id="prazo_rec"><option value="">Selecione</option><option value="10">À vista / até 15 dias</option><option value="30">30 dias</option><option value="60">60 dias</option><option value="90">90 dias ou mais</option></select>
+    </div>
+    <div class="fg"><label class="lbl">Prazo médio de pagamento a fornecedores</label>
+      <select id="prazo_pag"><option value="">Selecione</option><option value="10">À vista / até 15 dias</option><option value="30">30 dias</option><option value="60">60 dias</option><option value="90">90 dias ou mais</option></select>
+    </div>
+  </div>
+  <div class="nav"><button class="btn bo" onclick="ir(3)">← Anterior</button><button class="btn bp" onclick="ir(5)">Próximo →</button></div>
+</div>
+
+<!-- ══ S5 CONTRATOS ══ -->
+<div class="sec" id="s5">
+  <div class="sh">
+    <div class="sn">Seção 06 / 07</div>
+    <h2 class="st">Contratos, Precificação e Sistemas</h2>
+    <p class="sd2">Mapeamento dos contratos vigentes e da infraestrutura que precisará ser adaptada à reforma.</p>
+  </div>
+  <div class="fg"><label class="lbl">Possui contratos com prazo superior a 12 meses em vigor? <span class="ob">*</span></label>
+    <div class="og2"><div class="oc"><input type="radio" name="cont_lp" id="clp_s" value="Sim"><label for="clp_s">Sim</label></div><div class="oc"><input type="radio" name="cont_lp" id="clp_n" value="Não"><label for="clp_n">Não</label></div></div>
+  </div>
+  <div class="fg"><label class="lbl">Esses contratos possuem cláusula de reequilíbrio por alteração tributária?<span class="ht">Permite renegociar o preço em caso de criação ou aumento de tributos</span></label>
+    <div class="og">
+      <div class="oc"><input type="radio" name="clausula" id="cr_s" value="Sim — maioria tem"><label for="cr_s">Sim — maioria tem</label></div>
+      <div class="oc"><input type="radio" name="clausula" id="cr_p" value="Parte tem"><label for="cr_p">Parte tem</label></div>
+      <div class="oc"><input type="radio" name="clausula" id="cr_n" value="Não"><label for="cr_n">Não</label></div>
+      <div class="oc"><input type="radio" name="clausula" id="cr_ns" value="Não sei"><label for="cr_ns">Não sei</label></div>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Os contratos referenciam preço bruto ou líquido de tributos?</label>
+    <div class="og">
+      <div class="oc"><input type="radio" name="preco_cont" id="pb_b" value="Preço bruto (tributos incluídos)"><label for="pb_b">Preço bruto (tributos incluídos)</label></div>
+      <div class="oc"><input type="radio" name="preco_cont" id="pb_l" value="Preço líquido (tributos por fora)"><label for="pb_l">Preço líquido (tributos por fora)</label></div>
+      <div class="oc"><input type="radio" name="preco_cont" id="pb_v" value="Varia por contrato"><label for="pb_v">Varia por contrato</label></div>
+      <div class="oc"><input type="radio" name="preco_cont" id="pb_ns" value="Não sei"><label for="pb_ns">Não sei</label></div>
+    </div>
+  </div>
+  <div class="fg"><label class="lbl">Participa de licitações públicas?</label>
+    <div class="og3">
+      <div class="oc"><input type="radio" name="licitacao" id="lic_s" value="Sim — regularmente"><label for="lic_s">Sim — regularmente</label></div>
+      <div class="oc"><input type="radio" name="licitacao" id="lic_o" value="Sim — ocasionalmente"><label for="lic_o">Sim — ocasionalmente</label></div>
+      <div class="oc"><input type="radio" name="licitacao" id="lic_n" value="Não"><label for="lic_n">Não</label></div>
+    </div>
+  </div>
+  <hr class="dv">
+  <p class="sub">Sistemas e equipe</p>
+  <div class="row">
+    <div class="fg"><label class="lbl">Sistema de gestão (ERP)</label>
+      <select id="erp"><option value="">Selecione</option><option>SAP</option><option>TOTVS (Protheus / Datasul / RM)</option><option>Oracle</option><option>Microsoft Dynamics</option><option>Sankhya</option><option>Omie</option><option>ContaAzul</option><option>Sistema próprio</option><option>Planilhas / sem ERP</option><option>Outro</option></select>
+    </div>
+    <div class="fg"><label class="lbl">Departamento fiscal/contábil <span class="ob">*</span></label>
+      <div class="og3">
+        <div class="oc"><input type="radio" name="fiscal_tp" id="ft_i" value="Interno"><label for="ft_i">Interno</label></div>
+        <div class="oc"><input type="radio" name="fiscal_tp" id="ft_e" value="Terceirizado"><label for="ft_e">Terceirizado</label></div>
+        <div class="oc"><input type="radio" name="fiscal_tp" id="ft_m" value="Misto"><label for="ft_m">Misto</label></div>
+      </div>
+    </div>
+  </div>
+  <div class="nav"><button class="btn bo" onclick="ir(4)">← Anterior</button><button class="btn bp" onclick="ir(6)">Próximo →</button></div>
+</div>
+
+<!-- ══ S6 ENVIO ══ -->
+<div class="sec" id="s6">
+  <div class="sh">
+    <div class="sn">Seção 07 / 07</div>
+    <h2 class="st">Observações e Envio</h2>
+    <p class="sd2">Espaço livre para informações adicionais. Após o envio, nossa equipe analisará suas respostas e entrará em contato com o diagnóstico preliminar.</p>
+  </div>
+  <div class="fg"><label class="lbl">Preocupações ou pontos de atenção que a empresa já identifica</label>
+    <textarea id="preocupacoes" style="min-height:100px" placeholder="Ex.: impacto nos contratos com cliente âncora, adaptação do ERP, fornecedores críticos no Simples…"></textarea>
+  </div>
+  <div class="fg"><label class="lbl">Alguma situação relevante não coberta pelas perguntas anteriores?</label>
+    <textarea id="outros" style="min-height:80px" placeholder="Qualquer informação adicional útil para o diagnóstico"></textarea>
+  </div>
+  <div class="fg"><label class="lbl">Urgência percebida pela empresa <span class="ob">*</span></label>
+    <div class="og3">
+      <div class="oc"><input type="radio" name="urgencia" id="u_a" value="Alta — ação imediata"><label for="u_a">Alta — ação imediata</label></div>
+      <div class="oc"><input type="radio" name="urgencia" id="u_m" value="Média — próximos 6 meses"><label for="u_m">Média — próximos 6 meses</label></div>
+      <div class="oc"><input type="radio" name="urgencia" id="u_b" value="Baixa — ainda avaliando"><label for="u_b">Baixa — ainda avaliando</label></div>
+    </div>
+  </div>
+  <div id="erro-msg" class="erro" style="display:none"></div>
+  <div class="nav">
+    <button class="btn bo" onclick="ir(5)">← Anterior</button>
+    <button class="btn bg" id="btn-enviar" onclick="enviar()">Enviar Questionário ✓</button>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ── SUBSTITUA PELO SEU ENDPOINT DO FORMSPREE ──────────────
+// Após criar a conta em formspree.io, coloque aqui o endpoint
+// Exemplo: 'https://formspree.io/f/xabc1234'
+const FORMSPREE_URL = 'https://formspree.io/f/https://formspree.io/f/mykoyrzy';
+// ─────────────────────────────────────────────────────────
+
+let cur = 0;
+const TOTAL = 7;
+
+document.getElementById('dataHoje').textContent =
+  new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'long',year:'numeric'});
+
+function ir(n) {
+  document.getElementById('s'+cur).classList.remove('active');
+  cur = n;
+  document.getElementById('s'+cur).classList.add('active');
+  document.getElementById('pf').style.width = ((cur+1)/TOTAL*100)+'%';
+  document.querySelectorAll('.sd').forEach((d,i)=>{
+    d.classList.remove('active','done');
+    if(i===cur) d.classList.add('active');
+    else if(i<cur) d.classList.add('done');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+const G = id => { const e=document.getElementById(id); return e?e.value.trim():''; };
+const R = n => { const s=document.querySelector(`input[name="${n}"]:checked`); return s?s.value:''; };
+
+function getInsumos() {
+  return Array.from(document.querySelectorAll('input[name="insumos"]:checked')).map(e=>e.value).join(', ');
+}
+
+async function enviar() {
+  // Validação mínima
+  if(!G('razao')||!G('cnpj')||!G('email')) {
+    mostrarErro('Por favor preencha ao menos Razão Social, CNPJ e E-mail.');
+    return;
+  }
+  const btn = document.getElementById('btn-enviar');
+  btn.disabled = true;
+  btn.textContent = 'Enviando…';
+  document.getElementById('erro-msg').style.display='none';
+
+  // Monta payload estruturado
+  const dados = {
+    // Identificação
+    '01_Razão Social': G('razao'),
+    '02_Nome Fantasia': G('fantasia'),
+    '03_CNPJ': G('cnpj'),
+    '04_Estado': G('estado'),
+    '05_Contato': G('contato'),
+    '06_Cargo': G('cargo'),
+    '07_Email': G('email'),
+    '08_Telefone': G('tel'),
+    '09_Faturamento': G('faturamento'),
+    '10_Funcionários': G('funcionarios'),
+    '11_Grupo Econômico': R('grupo'),
+    // Regime
+    '12_Regime': R('regime'),
+    '13_PIS_COFINS': R('piscofins'),
+    '14_Benefício Fiscal': R('beneficio'),
+    '15_Benefício Descrição': G('beneficio_desc'),
+    '16_ISS': R('iss'),
+    '17_ICMS': R('icms'),
+    // Operação
+    '18_Setor': G('setor'),
+    '19_Margem': G('margem'),
+    '20_Descrição Operação': G('descricao'),
+    '21_Importação': R('importacao'),
+    '22_Exportação': R('exportacao'),
+    '23_Insumos Principais': getInsumos(),
+    // Fornecedores
+    '24_Perfil Fornecedores': R('perf_forn'),
+    '25_Fornecedor Crítico Simples': R('forn_crit'),
+    '26_Fornecedor Crítico Desc': G('forn_crit_desc'),
+    '27_Fornecedores Exterior': R('forn_ext'),
+    '28_Critério Seleção': R('crit_forn'),
+    // Clientes
+    '29_Perfil Venda': R('b2x'),
+    '30_Clientes Tomam Crédito': R('cli_cred'),
+    '31_Concentração Cliente': R('cli_conc'),
+    '32_Reembolso Despesas': R('reembolso'),
+    '33_Prazo Recebimento dias': G('prazo_rec'),
+    '34_Prazo Pagamento dias': G('prazo_pag'),
+    // Contratos
+    '35_Contratos Longo Prazo': R('cont_lp'),
+    '36_Cláusula Reequilíbrio': R('clausula'),
+    '37_Referência Preço': R('preco_cont'),
+    '38_Licitações': R('licitacao'),
+    '39_ERP': G('erp'),
+    '40_Fiscal Contábil': R('fiscal_tp'),
+    // Observações
+    '41_Preocupações': G('preocupacoes'),
+    '42_Outros': G('outros'),
+    '43_Urgência': R('urgencia'),
+    // Metadados
+    '_data_envio': new Date().toLocaleString('pt-BR'),
+    '_subject': `[Zaroni] Diagnóstico RT — ${G('razao')} (${G('email')})`,
+  };
+
+  try {
+    const res = await fetch(FORMSPREE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(dados),
+    });
+    if (res.ok) {
+      // Esconde todo o form, mostra sucesso
+      document.getElementById('s6').style.display='none';
+      document.querySelector('.pw').style.display='none';
+      document.getElementById('tela-sucesso').style.display='block';
+    } else {
+      throw new Error('Resposta do servidor: '+res.status);
+    }
+  } catch(e) {
+    mostrarErro('Erro ao enviar. Verifique sua conexão e tente novamente. ('+e.message+')');
+    btn.disabled=false;
+    btn.textContent='Enviar Questionário ✓';
+  }
+}
+
+function mostrarErro(msg) {
+  const el=document.getElementById('erro-msg');
+  el.textContent=msg;
+  el.style.display='block';
+}
+</script>
+</body>
+</html>
