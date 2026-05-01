@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador Interno — Zaroni Advogados</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap');
+:root{
+  --v:#6B1E2E;--ve:#4a1420;--vc:#8a2540;
+  --o:#C9A84C;--oc:#e0c27a;
+  --cr:#F9F5EE;--ce:#ede8de;
+  --t:#2c1a10;--tl:#6b5c4e;--b:#d8cfc2;--w:#ffffff;
+  --vd:#2d7a4f;--vm:#b03030;--va:#b07a10;
+  --serif:'Playfair Display',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--cr);color:var(--t);min-height:100vh}
+header{background:var(--ve);padding:22px 44px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--o)}
+.brand{color:var(--o);font-family:var(--serif);font-size:1.35rem;letter-spacing:.07em;font-weight:500}
+.brand-sub{color:rgba(201,168,76,.5);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;margin-top:3px}
+.meta{text-align:right;font-size:.68rem;color:rgba(255,255,255,.38);line-height:1.9}
+.badge{background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);color:var(--oc);font-size:.62rem;padding:4px 12px;border-radius:20px;letter-spacing:.1em;text-transform:uppercase}
+
+/* LOGIN */
+.login-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 80px);padding:40px 20px}
+.login-box{background:var(--w);border:1px solid var(--b);border-radius:8px;padding:48px 40px;width:100%;max-width:400px;text-align:center}
+.login-box h2{font-family:var(--serif);font-size:1.4rem;color:var(--v);margin:14px 0 10px}
+.login-box p{font-size:.84rem;color:var(--tl);line-height:1.65;margin-bottom:28px}
+.login-box input{width:100%;padding:11px 14px;border:1px solid var(--b);border-radius:4px;font-family:var(--sans);font-size:.88rem;margin-bottom:8px}
+.login-box input:focus{outline:none;border-color:var(--vc)}
+.login-err{color:var(--vm);font-size:.78rem;margin-bottom:12px;min-height:20px}
+.btn-login{width:100%;padding:12px;background:var(--v);color:var(--w);border:none;border-radius:3px;font-family:var(--sans);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.btn-login:hover{background:var(--ve)}
+
+/* MAIN */
+main{max-width:900px;margin:0 auto;padding:40px 28px 90px}
+.page-title{font-family:var(--serif);font-size:1.8rem;color:var(--v);font-weight:500;margin-bottom:6px}
+.page-sub{font-size:.84rem;color:var(--tl);margin-bottom:36px}
+
+/* TABS */
+.tabs{display:flex;border-bottom:1px solid var(--b);margin-bottom:32px}
+.tab{padding:10px 24px;border:none;border-bottom:2px solid transparent;background:transparent;cursor:pointer;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;color:var(--tl);font-weight:400;font-family:var(--sans);transition:all .18s}
+.tab.active{border-bottom-color:var(--v);color:var(--v);font-weight:600}
+
+/* SEÇÃO DE DADOS */
+.data-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.data-bloco{background:var(--w);border:1px solid var(--b);border-radius:6px;padding:20px 22px}
+.data-bloco h3{font-size:.68rem;font-weight:600;color:var(--v);letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+.data-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--ce);font-size:.82rem;gap:12px}
+.data-row:last-child{border-bottom:none}
+.dk{color:var(--tl);flex-shrink:0}
+.dv{font-weight:500;text-align:right}
+
+/* INPUTS DO SIMULADOR */
+.sim-box{background:var(--w);border:1px solid var(--b);border-radius:6px;padding:22px 26px;margin-bottom:24px}
+.sim-box-title{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--o);margin-bottom:16px;font-weight:600}
+.inp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.inp-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.fg{margin-bottom:16px}
+.lbl{display:block;font-size:.78rem;font-weight:500;color:var(--t);margin-bottom:5px}
+.ht{display:block;font-weight:300;color:var(--tl);font-size:.72rem;margin-top:2px}
+input[type=number]{width:100%;padding:10px 13px;border:1px solid var(--b);border-radius:4px;background:var(--w);font-family:var(--sans);font-size:.86rem;color:var(--t)}
+input[type=number]:focus{outline:none;border-color:var(--vc);box-shadow:0 0 0 3px rgba(107,30,46,.08)}
+.nota{background:linear-gradient(135deg,#fdf5f0,#faf0ec);border:1px solid var(--b);border-radius:6px;padding:18px 22px;margin-bottom:24px;font-size:.82rem;color:var(--tl);line-height:1.7}
+.nota strong{color:var(--t)}
+
+/* KPIs */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.kpi{background:var(--w);border:1px solid var(--b);border-radius:6px;padding:20px 16px;text-align:center}
+.kl{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tl);margin-bottom:8px}
+.kv{font-family:var(--serif);font-size:2rem;font-weight:500;line-height:1}
+.ks{font-size:.7rem;color:var(--tl);margin-top:5px}
+.pos .kv{color:var(--vd)}
+.neg .kv{color:var(--vm)}
+.neu .kv{color:var(--v)}
+.alr .kv{color:var(--va)}
+
+/* TABELAS */
+.tbl-wrap{margin-bottom:26px}
+.tbl-title{font-family:var(--serif);font-size:.9rem;font-weight:500;color:var(--v);margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:var(--ve);color:var(--o);padding:9px 13px;text-align:left;font-weight:500;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}
+td{padding:9px 13px;border-bottom:1px solid var(--ce)}
+tr:hover td{background:#fdf8f5}
+.nr{text-align:right;font-weight:500}
+.gn{color:var(--vd)}
+.rd{color:var(--vm)}
+.nt{color:var(--tl);font-style:italic}
+.tr-tot td{background:var(--ce);font-weight:600;border-top:2px solid var(--b)}
+
+/* ALERTAS */
+.sec-title-sm{font-family:var(--serif);font-size:.9rem;font-weight:500;color:var(--v);margin:24px 0 10px}
+.ab{border-radius:5px;padding:13px 17px;margin-bottom:12px;font-size:.82rem;line-height:1.65}
+.ab.danger{background:#fdf0f0;border-left:3px solid var(--vm);color:#7a2020}
+.ab.warn{background:#fdf8ec;border-left:3px solid var(--va);color:#7a5010}
+.ab.ok{background:#f0fdf5;border-left:3px solid var(--vd);color:#1a5030}
+.ab strong{display:block;margin-bottom:3px;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase}
+
+/* PLANO DE AÇÃO */
+.acoes-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+.ac{background:var(--w);border:1px solid var(--b);border-radius:5px;padding:16px 18px}
+.aa{font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--o);margin-bottom:6px;font-weight:600}
+.at{font-size:.81rem;line-height:1.6;color:var(--t)}
+.ap{display:inline-block;margin-top:8px;padding:2px 10px;border-radius:20px;font-size:.67rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.pa{background:#fde8e8;color:var(--vm)}
+.pm{background:#fdf4e0;color:var(--va)}
+.pb{background:#e8f5ee;color:var(--vd)}
+
+/* NOTAS INTERNAS */
+.notas-int{background:var(--w);border:1px solid var(--b);border-radius:6px;padding:22px 26px;margin-bottom:20px}
+.notas-int h3{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--o);margin-bottom:14px;font-weight:600}
+textarea.nota-inp{width:100%;padding:10px 13px;border:1px solid var(--b);border-radius:4px;font-family:var(--sans);font-size:.84rem;color:var(--t);min-height:100px;resize:vertical;line-height:1.6}
+textarea.nota-inp:focus{outline:none;border-color:var(--vc)}
+.btn-salvar{padding:10px 24px;background:var(--v);color:var(--w);border:none;border-radius:3px;font-family:var(--sans);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;margin-top:10px}
+.btn-salvar:hover{background:var(--ve)}
+.btn-print{padding:10px 24px;background:var(--o);color:var(--ve);border:none;border-radius:3px;font-family:var(--sans);font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;font-weight:600}
+.btn-print:hover{background:var(--oc)}
+.actions-row{display:flex;gap:12px;margin-top:28px;padding-top:22px;border-top:1px solid var(--b);justify-content:flex-end}
+.aguarda{background:#fdf5f0;border-left:3px solid var(--o);padding:13px 17px;border-radius:0 4px 4px 0;font-size:.82rem;color:var(--tl);margin-bottom:20px}
+
+hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
+
+@media print{
+  header,.tabs,.btn-print,.btn-salvar,.actions-row,.notas-int{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .login-wrap{display:none}
+  body{background:#fff}
+}
+@media(max-width:640px){
+  header{padding:16px 18px;flex-direction:column;gap:10px;text-align:center}
+  main{padding:28px 16px 60px}
+  .inp-grid,.inp-grid3,.kpi-grid,.acoes-grid,.data-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<header>
+  <div>
+    <div class="brand">Zaroni Advogados</div>
+    <div class="brand-sub">Painel Interno — Reforma Tributária</div>
+  </div>
+  <div class="meta"><div>Acesso Restrito</div><div class="badge">Uso Interno</div></div>
+</header>
+
+<div id="login-wrap" class="login-wrap">
+  <div class="login-box">
+    <div style="font-size:2.4rem">🔒</div>
+    <h2>Painel Interno</h2>
+    <p>Digite a senha de acesso ao simulador de diagnósticos da Zaroni Advogados.</p>
+    <input type="password" id="inp-senha" placeholder="Senha de acesso" onkeydown="if(event.key==='Enter')login()">
+    <div class="login-err" id="login-err"></div>
+    <button class="btn-login" onclick="login()">Entrar</button>
+  </div>
+</div>
+
+<!-- PAINEL PRINCIPAL -->
+<div id="painel" style="display:none">
+<main>
+  <div class="page-title">Simulador de Diagnóstico</div>
+  <p class="page-sub">Cole as respostas recebidas por e-mail e execute o simulador de impacto da reforma tributária.</p>
+
+  <div class="tabs">
+    <button class="tab active" onclick="aba('dados')">① Dados do Cliente</button>
+    <button class="tab" onclick="aba('simulador')">② Simulador de Impacto</button>
+    <button class="tab" onclick="aba('notas')">③ Notas Internas</button>
+  </div>
+
+  <!-- ABA 1: DADOS DO CLIENTE -->
+  <div id="aba-dados">
+    <p style="font-size:.84rem;color:var(--tl);margin-bottom:20px">Cole abaixo o JSON recebido por e-mail via Formspree. <strong>Dica:</strong> o e-mail do Formspree contém um link "View submission" — clique, copie o JSON e cole aqui.</p>
+    <div class="sim-box">
+      <div class="sim-box-title">Colar dados recebidos (JSON)</div>
+      <textarea class="nota-inp" id="json-input" placeholder='Cole aqui o conteúdo JSON recebido por e-mail&#10;&#10;Exemplo:&#10;{&#10;  "01_Razão Social": "Empresa Exemplo Ltda",&#10;  "07_Email": "contato@empresa.com.br",&#10;  ...&#10;}' style="min-height:180px;font-family:monospace;font-size:.78rem"></textarea>
+      <button class="btn-salvar" onclick="carregarJSON()">Carregar dados →</button>
+      <span id="json-err" style="color:var(--vm);font-size:.78rem;margin-left:14px"></span>
+    </div>
+
+    <div id="dados-view" style="display:none">
+      <div class="data-grid" id="dados-grid"></div>
+    </div>
+  </div>
+
+  <!-- ABA 2: SIMULADOR -->
+  <div id="aba-simulador" style="display:none">
+    <div class="nota">
+      <strong>Nota metodológica:</strong> alíquota de referência de <strong>26,5%</strong> para IBS+CBS (teto mínimo conforme LC 214/2024 — alíquota definitiva a ser fixada pelo Senado no 2º semestre de 2025). Os resultados são estimativas orientativas. A escolha do regime tributário deve ser feita com o contador da empresa.
+    </div>
+
+    <div class="sim-box">
+      <div class="sim-box-title">Parâmetros numéricos</div>
+      <div class="inp-grid" style="margin-bottom:16px">
+        <div class="fg"><label class="lbl">Receita bruta anual (R$)<span class="ht">Conforme dados contábeis do cliente</span></label><input type="number" id="sim_rec" placeholder="Ex.: 5000000" oninput="calcular()"></div>
+        <div class="fg"><label class="lbl">Custo direto anual total (R$)<span class="ht">Soma de todos os custos operacionais</span></label><input type="number" id="sim_cust" placeholder="Ex.: 3500000" oninput="calcular()"></div>
+      </div>
+      <div class="inp-grid3">
+        <div class="fg"><label class="lbl">% do custo que gera crédito<span class="ht">Insumos elegíveis: mercadorias, serviços, tecnologia, combustível…</span></label><input type="number" id="sim_cred" value="70" min="0" max="100" oninput="calcular()"></div>
+        <div class="fg"><label class="lbl">% do custo de fornecedores no Simples<span class="ht">Esses não gerarão crédito automático</span></label><input type="number" id="sim_simp" value="0" min="0" max="100" oninput="calcular()"></div>
+        <div class="fg"><label class="lbl">% do custo sem crédito (vedado)<span class="ht">Hospedagem e alimentação — vedados pela LC 214</span></label><input type="number" id="sim_ved" value="0" min="0" max="100" oninput="calcular()"></div>
+      </div>
+    </div>
+
+    <div id="aguarda-sim" class="aguarda">Preencha Receita e Custo acima para gerar as estimativas de impacto.</div>
+
+    <div id="resultado-sim" style="display:none">
+      <!-- KPIs -->
+      <div class="kpi-grid" id="kpi-area"></div>
+
+      <!-- Tabela carga -->
+      <div class="tbl-wrap">
+        <div class="tbl-title">Comparativo de carga tributária — hoje vs. 2027 vs. 2033</div>
+        <table id="tbl-carga"></table>
+      </div>
+
+      <!-- Tabela preços -->
+      <div class="tbl-wrap">
+        <div class="tbl-title">Impacto na precificação — cenários</div>
+        <table id="tbl-preco"></table>
+      </div>
+
+      <!-- Tabela caixa -->
+      <div class="tbl-wrap">
+        <div class="tbl-title">Impacto no fluxo de caixa — Split Payment</div>
+        <table id="tbl-caixa"></table>
+      </div>
+
+      <hr class="dv">
+
+      <!-- Alertas -->
+      <div class="sec-title-sm">Alertas e oportunidades identificados</div>
+      <div id="alertas"></div>
+
+      <hr class="dv">
+
+      <!-- Plano de ação -->
+      <div class="sec-title-sm">Plano de ação preliminar</div>
+      <div class="acoes-grid" id="acoes"></div>
+
+      <div class="actions-row">
+        <button class="btn-print" onclick="window.print()">⬇ Exportar / Imprimir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABA 3: NOTAS INTERNAS -->
+  <div id="aba-notas" style="display:none">
+    <div class="notas-int">
+      <h3>Notas e observações internas</h3>
+      <p style="font-size:.81rem;color:var(--tl);margin-bottom:14px;line-height:1.6">Registre aqui suas análises, próximos passos e comentários internos sobre este cliente. As notas ficam salvas localmente neste dispositivo.</p>
+      <textarea class="nota-inp" id="notas-txt" placeholder="Ex.: Cliente demonstrou preocupação com os contratos com Petrobras. Prioridade: revisar cláusula de reequilíbrio nos 3 contratos vigentes…"></textarea>
+      <button class="btn-salvar" onclick="salvarNotas()">Salvar notas</button>
+      <span id="notas-ok" style="color:var(--vd);font-size:.78rem;margin-left:12px"></span>
+    </div>
+    <div style="background:var(--w);border:1px solid var(--b);border-radius:6px;padding:20px 24px">
+      <div style="font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--o);margin-bottom:12px;font-weight:600">Próximas etapas sugeridas</div>
+      <div id="proximas-etapas" style="font-size:.83rem;color:var(--tl);line-height:1.75"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+// ── CONFIGURAÇÃO ──────────────────────────────────────────
+const SENHA = 'zaroni2025'; // Altere aqui se quiser mudar a senha
+
+// ── DADOS DO CLIENTE ──────────────────────────────────────
+let dadosCliente = {};
+
+// ── LÊ DADOS DO LINK MÁGICO ──────────────────────────────
+function lerDadosDoLink() {
+  try {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#dados=')) return false;
+    const base64 = hash.replace('#dados=', '');
+    const json = decodeURIComponent(escape(atob(base64)));
+    dadosCliente = JSON.parse(json);
+    return true;
+  } catch(e) { return false; }
+}
+
+// ── PRÉ-PREENCHE SIMULADOR COM BASE NAS RESPOSTAS ─────────
+function preencherSimuladorAuto() {
+  const perf = dadosCliente['24_Perfil Fornecedores'] || '';
+  if (perf === 'Predominantemente Simples') document.getElementById('sim_simp').value = 60;
+  else if (perf === 'Misto') document.getElementById('sim_simp').value = 25;
+  else document.getElementById('sim_simp').value = 0;
+
+  const ins = dadosCliente['23_Insumos Principais'] || '';
+  let ved = 0;
+  if (ins.includes('Hospedagem') && ins.includes('Alimentação')) ved = 20;
+  else if (ins.includes('Hospedagem') || ins.includes('Alimentação')) ved = 10;
+  document.getElementById('sim_ved').value = ved;
+
+  const setor = dadosCliente['18_Setor'] || '';
+  let cred = 65;
+  if (setor.includes('Comércio')) cred = 75;
+  else if (setor.includes('Indústria')) cred = 80;
+  else if (setor.includes('Serviços')) cred = 55;
+  else if (setor.includes('Tecnologia')) cred = 50;
+  document.getElementById('sim_cred').value = cred;
+}
+
+// ── LOGIN ─────────────────────────────────────────────────
+function login() {
+  const s = document.getElementById('inp-senha').value;
+  if (s === SENHA) {
+    document.getElementById('login-wrap').style.display='none';
+    document.getElementById('painel').style.display='block';
+
+    // Se veio via link mágico, carrega tudo automaticamente
+    if (lerDadosDoLink()) {
+      renderizarDados();
+      renderizarProximasEtapas();
+      preencherSimuladorAuto();
+      aba('simulador');
+
+      const banner = document.createElement('div');
+      banner.style.cssText = 'background:#f0fdf5;border-left:3px solid #3B6D11;border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;color:#1a5030;margin-bottom:20px;line-height:1.6';
+      banner.innerHTML = '<strong style="display:block;margin-bottom:2px;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase">✓ Dados carregados automaticamente</strong>Cliente: <strong>' + (dadosCliente['01_Razão Social'] || '—') + '</strong> &nbsp;·&nbsp; ' + (dadosCliente['07_Email'] || '');
+      const mainEl = document.querySelector('main');
+      if (mainEl) mainEl.prepend(banner);
+    }
+  } else {
+    document.getElementById('login-err').textContent = 'Senha incorreta.';
+  }
+}
+
+function aba(nome) {
+  ['dados','simulador','notas'].forEach(n=>{
+    document.getElementById('aba-'+n).style.display = n===nome?'block':'none';
+  });
+  document.querySelectorAll('.tab').forEach((t,i)=>{
+    t.classList.toggle('active', ['dados','simulador','notas'][i]===nome);
+  });
+  if(nome==='simulador') calcular();
+  if(nome==='notas') carregarNotas();
+}
+
+function carregarJSON() {
+  const raw = document.getElementById('json-input').value.trim();
+  const err = document.getElementById('json-err');
+  try {
+    dadosCliente = JSON.parse(raw);
+    renderizarDados();
+    renderizarProximasEtapas();
+    err.textContent = '✓ Dados carregados com sucesso.';
+    err.style.color = 'var(--vd)';
+    // Pré-preencher % fornecedores simples se informado
+    if (dadosCliente['24_Perfil Fornecedores']==='Predominantemente Simples') {
+      document.getElementById('sim_simp').value = 60;
+    } else if (dadosCliente['24_Perfil Fornecedores']==='Misto') {
+      document.getElementById('sim_simp').value = 25;
+    }
+    // Pré-preencher % vedado se marcou hospedagem/alimentação
+    const ins = dadosCliente['23_Insumos Principais']||'';
+    if (ins.includes('Hospedagem') || ins.includes('Alimentação')) {
+      document.getElementById('sim_ved').value = 15;
+    }
+    calcular();
+  } catch(e) {
+    err.textContent = 'JSON inválido. Verifique o formato.';
+    err.style.color = 'var(--vm)';
+  }
+}
+
+function renderizarDados() {
+  const d = dadosCliente;
+  const blocos = [
+    { t:'Identificação', campos:[
+      ['Razão Social',d['01_Razão Social']],['CNPJ',d['03_CNPJ']],['Estado',d['04_Estado']],
+      ['Contato',d['05_Contato']+(d['06_Cargo']?' — '+d['06_Cargo']:'')],
+      ['E-mail',d['07_Email']],['Faturamento',d['09_Faturamento']],
+      ['Funcionários',d['10_Funcionários']],['Grupo',d['11_Grupo Econômico']],
+    ]},
+    { t:'Regime Tributário', campos:[
+      ['Regime',d['12_Regime']],['PIS/COFINS',d['13_PIS_COFINS']],
+      ['Benefício fiscal',d['14_Benefício Fiscal']],['Descrição',d['15_Benefício Descrição']],
+      ['ISS',d['16_ISS']],['ICMS',d['17_ICMS']],
+    ]},
+    { t:'Operação', campos:[
+      ['Setor',d['18_Setor']],['Margem aprox.',d['19_Margem']?(d['19_Margem']+'%'):''],
+      ['Importação',d['21_Importação']],['Exportação',d['22_Exportação']],
+      ['Insumos principais',d['23_Insumos Principais']],
+    ]},
+    { t:'Fornecedores', campos:[
+      ['Perfil',d['24_Perfil Fornecedores']],['Crítico Simples',d['25_Fornecedor Crítico Simples']],
+      ['Descrição',d['26_Fornecedor Crítico Desc']],['Exterior',d['27_Fornecedores Exterior']],
+      ['Critério seleção',d['28_Critério Seleção']],
+    ]},
+    { t:'Clientes', campos:[
+      ['Perfil venda',d['29_Perfil Venda']],['Tomam crédito',d['30_Clientes Tomam Crédito']],
+      ['Concentração',d['31_Concentração Cliente']],['Reembolso',d['32_Reembolso Despesas']],
+      ['Prazo receb.',d['33_Prazo Recebimento dias']?(d['33_Prazo Recebimento dias']+' dias'):''],
+      ['Prazo pagam.',d['34_Prazo Pagamento dias']?(d['34_Prazo Pagamento dias']+' dias'):''],
+    ]},
+    { t:'Contratos e Sistemas', campos:[
+      ['Contratos LP',d['35_Contratos Longo Prazo']],['Cláusula reequil.',d['36_Cláusula Reequilíbrio']],
+      ['Ref. de preço',d['37_Referência Preço']],['Licitações',d['38_Licitações']],
+      ['ERP',d['39_ERP']],['Fiscal',d['40_Fiscal Contábil']],
+    ]},
+    { t:'Observações', campos:[
+      ['Preocupações',d['41_Preocupações']],['Outros',d['42_Outros']],['Urgência',d['43_Urgência']],
+    ]},
+  ];
+
+  const grid = document.getElementById('dados-grid');
+  grid.innerHTML = blocos.map(b => {
+    const campos = b.campos.filter(([,v])=>v&&v.trim());
+    if (!campos.length) return '';
+    return `<div class="data-bloco">
+      <h3>${b.t}</h3>
+      ${campos.map(([k,v])=>`<div class="data-row"><span class="dk">${k}</span><span class="dv">${v}</span></div>`).join('')}
+    </div>`;
+  }).join('');
+  document.getElementById('dados-view').style.display='block';
+}
+
+// ── SIMULADOR ─────────────────────────────────────────────
+const fm = v=>'R$ '+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
+const fp = v=>Number(v).toFixed(1)+'%';
+
+function calcular() {
+  const rec  = parseFloat(document.getElementById('sim_rec')?.value)||0;
+  const cust = parseFloat(document.getElementById('sim_cust')?.value)||0;
+  const pCred= Math.min(100,parseFloat(document.getElementById('sim_cred')?.value)||70)/100;
+  const pSimp= Math.min(100,parseFloat(document.getElementById('sim_simp')?.value)||0)/100;
+
+  const d = dadosCliente;
+  const regime = d['12_Regime']||'';
+  const pc     = d['13_PIS_COFINS']||'';
+
+  if (!rec||!cust) {
+    document.getElementById('resultado-sim').style.display='none';
+    document.getElementById('aguarda-sim').style.display='block';
+    return;
+  }
+  document.getElementById('resultado-sim').style.display='block';
+  document.getElementById('aguarda-sim').style.display='none';
+
+  // Alíquotas
+  const CBS=0.088, IBS=0.177, TOT=CBS+IBS; // 26,5%
+  let alqAt = pc.includes('Cumulativo') ? 0.0365+0.05
+            : pc.includes('Não Cumulativo') ? 0.0925+0.05
+            : regime.includes('Simples') ? 0.12 : 0.0365+0.05;
+
+  const impAt    = rec*alqAt;
+  const impCBS27 = rec*CBS;
+  const impTot33 = rec*TOT;
+  const credBase = cust*pCred;
+  const credEfet = (credBase - credBase*pSimp)*TOT;
+  const impLiq27 = Math.max(0,impCBS27 - credEfet*(CBS/TOT));
+  const impLiq33 = Math.max(0,impTot33 - credEfet);
+
+  const pRec = parseInt(d['33_Prazo Recebimento dias'])||30;
+  const pPag = parseInt(d['34_Prazo Pagamento dias'])||30;
+  const impCaixa = (impTot33/12)*((pRec-pPag)/30);
+
+  const recLiq   = rec-impAt;
+  const recLiq33 = rec-impLiq33;
+  const varMarg  = ((recLiq33-recLiq)/rec)*100;
+  const recLiqAt = rec/(1+alqAt);
+  const precoBrut= recLiqAt*(1+TOT);
+  const varBrut  = ((precoBrut-rec)/rec)*100;
+
+  // KPIs
+  document.getElementById('kpi-area').innerHTML=`
+    <div class="kpi ${Math.abs(varMarg)<2?'neu':varMarg>0?'pos':'neg'}">
+      <div class="kl">Variação de Margem</div>
+      <div class="kv">${varMarg>=0?'+':''}${fp(varMarg)}</div>
+      <div class="ks">vs. hoje · em 2033</div>
+    </div>
+    <div class="kpi neu">
+      <div class="kl">Crédito Anual Estimado</div>
+      <div class="kv">${fm(credEfet)}</div>
+      <div class="ks">IBS+CBS sobre insumos elegíveis</div>
+    </div>
+    <div class="kpi ${impCaixa>0?'neg':'pos'}">
+      <div class="kl">Impacto Caixa / Mês</div>
+      <div class="kv">${fm(Math.abs(impCaixa))}</div>
+      <div class="ks">${impCaixa>0?'Necessidade adicional':'Folga potencial'}</div>
+    </div>`;
+
+  document.getElementById('tbl-carga').innerHTML=`
+    <thead><tr><th>Cenário</th><th>Tributos s/ Receita</th><th>(-) Créditos</th><th>Carga Líquida</th><th>% Receita</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Hoje (2025)</strong></td><td class="nr">${fm(impAt)}</td><td class="nr nt">—</td><td class="nr"><strong>${fm(impAt)}</strong></td><td class="nr">${fp(alqAt*100)}</td></tr>
+      <tr><td><strong>2027 (CBS entra)</strong></td><td class="nr">${fm(impCBS27)}</td><td class="nr gn">-${fm(credEfet*(CBS/TOT))}</td><td class="nr"><strong>${fm(impLiq27)}</strong></td><td class="nr">${fp((impLiq27/rec)*100)}</td></tr>
+      <tr class="tr-tot"><td><strong>2033 (Pleno)</strong></td><td class="nr">${fm(impTot33)}</td><td class="nr gn">-${fm(credEfet)}</td><td class="nr"><strong>${fm(impLiq33)}</strong></td><td class="nr">${fp((impLiq33/rec)*100)}</td></tr>
+    </tbody>`;
+
+  document.getElementById('tbl-preco').innerHTML=`
+    <thead><tr><th>Cenário</th><th>Preço Bruto</th><th>Receita Líquida</th><th>Var. Preço Bruto</th></tr></thead>
+    <tbody>
+      <tr><td>Mantendo receita líquida <strong>(recomendado)</strong></td><td class="nr"><strong>${fm(precoBrut)}</strong></td><td class="nr">${fm(recLiqAt)}</td><td class="nr rd">+${fp(varBrut)}</td></tr>
+      <tr class="tr-tot"><td>Mantendo preço bruto (absorvendo)</td><td class="nr">${fm(rec)}</td><td class="nr rd"><strong>${fm(rec-impLiq33)}</strong></td><td class="nr nt">0%</td></tr>
+    </tbody>`;
+
+  document.getElementById('tbl-caixa').innerHTML=`
+    <thead><tr><th>Parâmetro</th><th>Situação Atual</th><th>Com Split Payment (2027+)</th></tr></thead>
+    <tbody>
+      <tr><td>Recebimento após NF</td><td class="nr">${pRec} dias</td><td class="nr">No ato do pagamento (automático)</td></tr>
+      <tr><td>Imposto mensal médio</td><td class="nr">${fm(impAt/12)}</td><td class="nr">${fm(impTot33/12)}</td></tr>
+      <tr><td>Prazo de recolhimento</td><td class="nr">~20 dias após fechamento</td><td class="nr">No momento do recebimento</td></tr>
+      <tr class="tr-tot"><td><strong>Impacto estimado no caixa</strong></td><td class="nr">—</td><td class="nr ${impCaixa>0?'rd':'gn'}"><strong>${fm(Math.abs(impCaixa))} / mês</strong></td></tr>
+    </tbody>`;
+
+  // Alertas
+  let ah='';
+  if(d['14_Benefício Fiscal']==='Sim') ah+=`<div class="ab danger"><strong>⚠ Benefício fiscal em risco</strong>Incentivo de ICMS vigente será extinto progressivamente até 2033. Mapear impacto e avaliar alternativas antes de 2029.</div>`;
+  if(d['25_Fornecedor Crítico Simples']==='Sim'||d['24_Perfil Fornecedores']==='Predominantemente Simples') ah+=`<div class="ab warn"><strong>⚠ Fornecedores no Simples Nacional</strong>Parcela dos fornecedores pode não gerar crédito de IBS/CBS. Mapear criticamente e iniciar diálogo sobre regime híbrido.</div>`;
+  if(d['36_Cláusula Reequilíbrio']==='Não'||d['36_Cláusula Reequilíbrio']==='Não sei') ah+=`<div class="ab danger"><strong>⚠ Contratos sem cláusula de reequilíbrio</strong>Contratos de longo prazo sem cláusula tributária expõem a empresa ao risco de absorver integralmente o aumento de carga. Revisão jurídica urgente.</div>`;
+  if(pRec>=60) ah+=`<div class="ab warn"><strong>⚠ Prazo de recebimento longo — risco de caixa</strong>Com o split payment, imposto retido no ato do recebimento. Prazo de ${pRec} dias cria pressão no capital de giro.</div>`;
+  if(d['32_Reembolso Despesas']==='Sim') ah+=`<div class="ab warn"><strong>⚠ Reembolso de despesas — novo tratamento tributário</strong>A partir de 2027, reembolsos passarão a ser operações tributáveis. Necessário adaptar emissão de NFs e avaliar inclusão de margem.</div>`;
+  const ins=d['23_Insumos Principais']||'';
+  if(ins.includes('Hospedagem')||ins.includes('Alimentação')) ah+=`<div class="ab warn"><strong>⚠ Custos vedados — hospedagem e/ou alimentação</strong>Esses custos não gerarão crédito de IBS/CBS por vedação expressa da LC 214/2024. Avaliar alternativas operacionais.</div>`;
+  if(varMarg<-5) ah+=`<div class="ab danger"><strong>⚠ Impacto relevante na margem</strong>Estimativa indica redução de ${Math.abs(varMarg).toFixed(1)} p.p. na margem sem renegociação de preços. Estratégia comercial urgente.</div>`;
+  if(!ah) ah=`<div class="ab ok"><strong>✓ Perfil de risco moderado</strong>Nenhum alerta crítico identificado. O plano de ação preventivo é suficiente para atravessar o período de transição.</div>`;
+  document.getElementById('alertas').innerHTML=ah;
+
+  // Ações
+  const acs=[];
+  if(regime.includes('Simples')) acs.push({a:'Tributário',t:'Avaliar migração para Lucro Presumido ou adesão ao regime híbrido de IBS/CBS, para preservar competitividade perante clientes do Lucro Real.',p:'alta'});
+  if(d['28_Critério Seleção']==='Menor preço bruto') acs.push({a:'Compras / Procurement',t:'Atualizar política de cotação para comparar preço líquido de tributos (preço bruto menos crédito gerado), não apenas preço bruto.',p:'alta'});
+  if(d['35_Contratos Longo Prazo']==='Sim'&&(d['36_Cláusula Reequilíbrio']==='Não'||d['36_Cláusula Reequilíbrio']==='Não sei')) acs.push({a:'Jurídico / Contratos',t:'Revisar contratos de longo prazo e inserir cláusula de reequilíbrio econômico-financeiro por alteração tributária.',p:'alta'});
+  acs.push({a:'TI / Sistemas',t:'Parametrizar o ERP para suportar apuração separada de IBS e CBS, apropriar créditos por insumo e reconciliar com o split payment.',p:'media'});
+  acs.push({a:'Financeiro',t:'Modelar o impacto do split payment no fluxo de caixa considerando os prazos de recebimento e pagamento. Dimensionar eventual necessidade de capital de giro adicional.',p:'media'});
+  const b2x=d['29_Perfil Venda']||'';
+  if(b2x.includes('B2B')||b2x.includes('B2G')||b2x.includes('Misto')) acs.push({a:'Comercial',t:'Desenvolver argumentário para renegociação de preços com clientes, comprovando variação de carga tributária por comparação de notas fiscais.',p:'alta'});
+  acs.push({a:'Fiscal / Contábil',t:'Monitorar publicação da alíquota definitiva de CBS/IBS (prevista 2º sem. 2025) e do Imposto Seletivo. Atualizar projeções assim que publicadas.',p:'baixa'});
+  document.getElementById('acoes').innerHTML=acs.map(a=>`
+    <div class="ac">
+      <div class="aa">${a.a}</div>
+      <div class="at">${a.t}</div>
+      <span class="ap ${a.p==='alta'?'pa':a.p==='media'?'pm':'pb'}">${a.p==='alta'?'Prioridade Alta':a.p==='media'?'Prioridade Média':'Monitoramento'}</span>
+    </div>`).join('');
+}
+
+// ── NOTAS INTERNAS ────────────────────────────────────────
+function salvarNotas() {
+  const txt = document.getElementById('notas-txt').value;
+  const cliente = dadosCliente['03_CNPJ']||'sem_cnpj';
+  localStorage.setItem('notas_'+cliente, txt);
+  const ok = document.getElementById('notas-ok');
+  ok.textContent='✓ Salvo';
+  setTimeout(()=>ok.textContent='',2000);
+}
+
+function carregarNotas() {
+  const cliente = dadosCliente['03_CNPJ']||'sem_cnpj';
+  const txt = localStorage.getItem('notas_'+cliente)||'';
+  document.getElementById('notas-txt').value=txt;
+}
+
+function renderizarProximasEtapas() {
+  const d = dadosCliente;
+  const etapas = [];
+  if(d['35_Contratos Longo Prazo']==='Sim') etapas.push('Agendar revisão jurídica dos contratos de longo prazo vigentes');
+  if(d['25_Fornecedor Crítico Simples']==='Sim') etapas.push('Mapear fornecedores críticos no Simples e iniciar diagnóstico do regime híbrido');
+  etapas.push('Solicitar dados contábeis para execução do simulador quantitativo completo');
+  etapas.push('Apresentar diagnóstico preliminar ao cliente com base nas estimativas do simulador');
+  etapas.push('Monitorar publicação da alíquota definitiva de CBS/IBS (prevista 2º sem. 2025)');
+  document.getElementById('proximas-etapas').innerHTML = etapas.map((e,i)=>`<div style="padding:7px 0;border-bottom:1px solid var(--ce);display:flex;gap:10px"><span style="color:var(--o);font-weight:600;flex-shrink:0">${i+1}.</span><span>${e}</span></div>`).join('');
+}
+</script>
+</body>
+</html>
