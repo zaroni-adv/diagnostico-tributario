@@ -423,7 +423,7 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:24px 0}
 // ── SUBSTITUA PELO SEU ENDPOINT DO FORMSPREE ──────────────
 // Após criar a conta em formspree.io, coloque aqui o endpoint
 // Exemplo: 'https://formspree.io/f/xabc1234'
-const FORMSPREE_URL = 'https://formspree.io/f/https://formspree.io/f/mykoyrzy';
+const FORMSPREE_URL = 'https://formspree.io/f/SEU_ID_AQUI';
 // ─────────────────────────────────────────────────────────
 
 let cur = 0;
@@ -519,6 +519,26 @@ async function enviar() {
     '_data_envio': new Date().toLocaleString('pt-BR'),
     '_subject': `[Zaroni] Diagnóstico RT — ${G('razao')} (${G('email')})`,
   };
+
+  // ── GERA O LINK MÁGICO ───────────────────────────────────
+  // Codifica todos os dados em Base64 e embute no link do simulador.
+  // O link aponta para o arquivo simulador-zaroni.html no computador —
+  // mas como ele roda localmente, usamos um data: URI via hash.
+  // Na prática: o link vai no e-mail; você clica; o simulador lê os dados.
+  const dadosSemMeta = { ...dados };
+  delete dadosSemMeta['_subject'];
+  delete dadosSemMeta['_data_envio'];
+
+  const base64 = btoa(unescape(encodeURIComponent(JSON.stringify(dadosSemMeta))));
+
+  // Link que abre o simulador online (GitHub Pages) com os dados embutidos
+  // Troque pela URL real do seu simulador quando publicar
+  const urlSimulador = 'https://zaroni-adv.github.io/diagnostico-tributario/simulador.html';
+  const linkMagico = `${urlSimulador}#dados=${base64}`;
+
+  // Adiciona o link ao payload para aparecer no e-mail
+  dados['_link_simulador'] = linkMagico;
+  dados['⚡ Abrir Simulador'] = linkMagico;
 
   try {
     const res = await fetch(FORMSPREE_URL, {
