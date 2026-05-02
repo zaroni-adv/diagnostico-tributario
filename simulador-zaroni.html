@@ -361,7 +361,8 @@ function lerDadosDoLink() {
     const hash = window.location.hash;
     if (!hash.startsWith('#dados=')) return false;
     const base64 = hash.replace('#dados=', '');
-    const json = decodeURIComponent(escape(atob(base64)));
+    const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+    const json = new TextDecoder('utf-8').decode(bytes);
     dadosCliente = JSON.parse(json);
     return true;
   } catch(e) { return false; }
@@ -455,7 +456,8 @@ function carregarJSON() {
   // Aceitar base64 puro (começa com 'ey' = '{' em base64)
   if (!raw.startsWith('{') && raw.length > 20) {
     try {
-      const decoded = decodeURIComponent(escape(atob(raw)));
+      const bytes = Uint8Array.from(atob(raw), c => c.charCodeAt(0));
+      const decoded = new TextDecoder('utf-8').decode(bytes);
       if (decoded.startsWith('{')) raw = decoded;
     } catch(e2) {}
   }
