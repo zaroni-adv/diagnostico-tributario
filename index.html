@@ -152,7 +152,7 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:24px 0}
   <p class="sub">Porte e estrutura</p>
   <div class="row">
     <div class="fg"><label class="lbl">Faturamento bruto anual aproximado <span class="ob">*</span></label>
-      <select id="faturamento"><option value="">Selecione</option><option>Até R$ 360 mil (MEI)</option><option>R$ 360 mil – R$ 4,8 mi (Simples)</option><option>R$ 4,8 mi – R$ 20 mi</option><option>R$ 20 mi – R$ 100 mi</option><option>Acima de R$ 100 mi</option></select>
+      <select id="faturamento" onchange="ajustarRegime()"><option value="">Selecione</option><option value="180000">Até R$ 360 mil (MEI)</option><option value="2500000">R$ 360 mil – R$ 4,8 mi (Simples)</option><option value="10000000">R$ 4,8 mi – R$ 20 mi</option><option value="50000000">R$ 20 mi – R$ 100 mi</option><option value="200000000">Acima de R$ 100 mi</option></select>
     </div>
     <div class="fg"><label class="lbl">Número de funcionários</label>
       <select id="funcionarios"><option value="">Selecione</option><option>Até 10</option><option>11 – 50</option><option>51 – 200</option><option>201 – 1.000</option><option>Acima de 1.000</option></select>
@@ -223,8 +223,20 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:24px 0}
   </div>
   <div class="row">
     <div class="fg"><label class="lbl">Setor principal <span class="ob">*</span></label>
-      <select id="setor"><option value="">Selecione</option><option>Comércio (revenda de mercadorias)</option><option>Indústria / Manufatura</option><option>Prestação de Serviços</option><option>Serviços e Comércio (misto)</option><option>Agronegócio</option><option>Saúde</option><option>Educação</option><option>Tecnologia / Software / SaaS</option><option>Logística e Transporte</option><option>Construção Civil</option><option>Imobiliário / Incorporação</option><option>Financeiro / Seguros</option><option>Petróleo, Gás e Energia</option><option>Aviação / Transporte Aéreo</option><option>Outro</option></select>
+      <select id="setor" onchange="mostrarSubatividade()"><option value="">Selecione</option><option>Comércio (revenda de mercadorias)</option><option>Indústria / Manufatura</option><option>Prestação de Serviços</option><option>Serviços e Comércio (misto)</option><option>Agronegócio</option><option>Saúde</option><option>Educação</option><option>Tecnologia / Software / SaaS</option><option>Logística e Transporte</option><option>Construção Civil</option><option>Imobiliário / Incorporação</option><option>Financeiro / Seguros</option><option>Petróleo, Gás e Energia</option><option>Aviação / Transporte Aéreo</option><option>Outro</option></select>
     </div>
+  <!-- Subatividade — aparece apenas para setores de serviços no Simples -->
+  <div class="fg" id="bloco_subatividade" style="display:none">
+    <label class="lbl">Natureza da atividade de serviços
+      <span class="ht">Necessário para identificar o Anexo correto do Simples Nacional e calcular a alíquota efetiva real</span>
+    </label>
+    <div class="og">
+      <div class="oc"><input type="radio" name="subatividade" id="sub_a3" value="Anexo III — Serviços gerais (instalação, reparos, manutenção, transporte, academias, agências de viagem)"><label for="sub_a3">Serviços gerais<br><small style="font-weight:300;font-size:.76rem;color:#888">Instalação, reparos, manutenção, transporte, academias, agências</small></label></div>
+      <div class="oc"><input type="radio" name="subatividade" id="sub_a4" value="Anexo IV — Serviços regulamentados (advocacia, engenharia, medicina, odontologia, jornalismo, limpeza, vigilância)"><label for="sub_a4">Serviços regulamentados<br><small style="font-weight:300;font-size:.76rem;color:#888">Advocacia, engenharia, medicina, contabilidade, limpeza, vigilância</small></label></div>
+      <div class="oc"><input type="radio" name="subatividade" id="sub_a5" value="Anexo V — Serviços intelectuais (TI, consultoria, publicidade, auditoria, design, tecnologia, RH)"><label for="sub_a5">Serviços intelectuais / TI<br><small style="font-weight:300;font-size:.76rem;color:#888">TI, consultoria, publicidade, auditoria, design, RH</small></label></div>
+      <div class="oc"><input type="radio" name="subatividade" id="sub_ns" value="Não sei identificar"><label for="sub_ns">Não sei identificar</label></div>
+    </div>
+  </div>
     <div class="fg"><label class="lbl">Margem bruta aproximada <span class="ob">*</span></label>
       <select id="margem"><option value="">Selecione</option><option value="5">Abaixo de 10%</option><option value="15">10% – 20%</option><option value="27">20% – 35%</option><option value="42">35% – 50%</option><option value="60">Acima de 50%</option></select>
     </div>
@@ -516,6 +528,7 @@ async function enviar() {
     '39_ERP': G('erp'),
     '40_Fiscal Contábil': R('fiscal_tp'),
     // Observações
+    '11b_Subatividade Serviços': R('subatividade'),
     '41_Preocupações': G('preocupacoes'),
     '42_Outros': G('outros'),
     '43_Urgência': R('urgencia'),
@@ -563,6 +576,60 @@ async function enviar() {
     btn.disabled=false;
     btn.textContent='Enviar Questionário ✓';
   }
+}
+
+function ajustarRegime() {
+  const fat = parseFloat(document.getElementById('faturamento').value) || 0;
+  const radios = document.querySelectorAll('input[name="regime"]');
+  
+  radios.forEach(r => {
+    r.disabled = false;
+    r.closest('.oc').style.opacity = '1';
+    r.closest('.oc').style.pointerEvents = 'auto';
+  });
+
+  // MEI ou Simples: só pode ser Simples Nacional
+  if (fat <= 4800000 && fat > 0) {
+    radios.forEach(r => {
+      if (r.value !== 'Simples Nacional' && r.value !== 'Não sei') {
+        r.disabled = true;
+        r.checked = false;
+        r.closest('.oc').style.opacity = '0.35';
+        r.closest('.oc').style.pointerEvents = 'none';
+      }
+    });
+    // Seleciona Simples automaticamente se faturamento for até 4,8mi
+    const simples = document.getElementById('r_s');
+    if (simples) { simples.checked = true; togglePisCofins(); }
+  }
+  // Acima de 4,8mi: Simples não é possível
+  else if (fat > 4800000) {
+    radios.forEach(r => {
+      if (r.value === 'Simples Nacional') {
+        r.disabled = true;
+        r.checked = false;
+        r.closest('.oc').style.opacity = '0.35';
+        r.closest('.oc').style.pointerEvents = 'none';
+      }
+    });
+    // Se tinha Simples selecionado, limpa e mostra PIS/COFINS
+    const simples = document.getElementById('r_s');
+    if (simples && simples.checked) {
+      simples.checked = false;
+      togglePisCofins();
+    }
+  }
+}
+
+function mostrarSubatividade() {
+  const setor = document.getElementById('setor').value;
+  const bloco = document.getElementById('bloco_subatividade');
+  const ehServico = setor.includes('Serviços') || setor.includes('Tecnologia') ||
+                    setor.includes('Saúde') || setor.includes('Educação') ||
+                    setor.includes('Logística') || setor.includes('Financeiro') ||
+                    setor.includes('Construção') || setor.includes('Imobiliário') ||
+                    setor.includes('Petróleo') || setor.includes('Aviação') || setor.includes('Outro');
+  if (bloco) bloco.style.display = ehServico ? 'block' : 'none';
 }
 
 function togglePisCofins() {
