@@ -153,6 +153,7 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:24px 0}
   <div class="row">
     <div class="fg"><label class="lbl">Faturamento bruto anual aproximado <span class="ob">*</span></label>
       <select id="faturamento" onchange="ajustarRegime()"><option value="">Selecione</option><option value="180000">Até R$ 360 mil (MEI)</option><option value="2500000">R$ 360 mil – R$ 4,8 mi (Simples)</option><option value="10000000">R$ 4,8 mi – R$ 20 mi</option><option value="50000000">R$ 20 mi – R$ 100 mi</option><option value="200000000">Acima de R$ 100 mi</option></select>
+      <div id="aviso_regime_fat" class="callout" style="display:none;margin-top:10px"></div>
     </div>
     <div class="fg"><label class="lbl">Número de funcionários</label>
       <select id="funcionarios"><option value="">Selecione</option><option>Até 10</option><option>11 – 50</option><option>51 – 200</option><option>201 – 1.000</option><option>Acima de 1.000</option></select>
@@ -581,44 +582,35 @@ async function enviar() {
 function ajustarRegime() {
   const fat = parseFloat(document.getElementById('faturamento').value) || 0;
   const radios = document.querySelectorAll('input[name="regime"]');
-  
+  const aviso = document.getElementById('aviso_regime_fat');
+
+  // Reabilitar todos os regimes sempre
   radios.forEach(r => {
     r.disabled = false;
     r.closest('.oc').style.opacity = '1';
     r.closest('.oc').style.pointerEvents = 'auto';
   });
 
-  // MEI ou Simples: só pode ser Simples Nacional
-  if (fat <= 4800000 && fat > 0) {
-    radios.forEach(r => {
-      if (r.value !== 'Simples Nacional' && r.value !== 'Não sei') {
-        r.disabled = true;
-        r.checked = false;
-        r.closest('.oc').style.opacity = '0.35';
-        r.closest('.oc').style.pointerEvents = 'none';
-      }
-    });
-    // Seleciona Simples automaticamente se faturamento for até 4,8mi
+  // Apenas avisos informativos — sem bloquear escolhas
+  if (aviso) aviso.style.display = 'none';
+
+  if (fat > 4800000) {
+    // Acima de R$ 4,8 mi: Simples Nacional é vedado por lei
     const simples = document.getElementById('r_s');
-    if (simples) { simples.checked = true; togglePisCofins(); }
-  }
-  // Acima de 4,8mi: Simples não é possível
-  else if (fat > 4800000) {
-    radios.forEach(r => {
-      if (r.value === 'Simples Nacional') {
-        r.disabled = true;
-        r.checked = false;
-        r.closest('.oc').style.opacity = '0.35';
-        r.closest('.oc').style.pointerEvents = 'none';
-      }
-    });
-    // Se tinha Simples selecionado, limpa e mostra PIS/COFINS
-    const simples = document.getElementById('r_s');
-    if (simples && simples.checked) {
+    if (simples) {
+      simples.disabled = true;
       simples.checked = false;
+      simples.closest('.oc').style.opacity = '0.35';
+      simples.closest('.oc').style.pointerEvents = 'none';
       togglePisCofins();
     }
+    if (aviso) {
+      aviso.textContent = 'Faturamento acima de R$ 4,8 mi: o Simples Nacional é vedado por lei (LC 123/2006). Lucro Presumido ou Lucro Real — conforme opção do contribuinte.';
+      aviso.style.display = 'block';
+    }
   }
+  // Abaixo de R$ 4,8 mi: todos os regimes são possíveis por opção do contribuinte
+  // Nenhuma restrição automática — apenas informar
 }
 
 function mostrarSubatividade() {
