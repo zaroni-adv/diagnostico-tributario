@@ -205,7 +205,7 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
     <p style="font-size:.84rem;color:var(--tl);margin-bottom:20px">Cole abaixo o JSON recebido por e-mail via Formspree. <strong>Dica:</strong> o e-mail do Formspree contém um link "View submission" — clique, copie o JSON e cole aqui.</p>
     <div class="sim-box">
       <div class="sim-box-title">Colar dados recebidos (JSON)</div>
-      <textarea class="nota-inp" id="json-input" placeholder='Cole aqui o conteúdo JSON recebido por e-mail&#10;&#10;Exemplo:&#10;{&#10;  "01_Razão Social": "Empresa Exemplo Ltda",&#10;  "07_Email": "contato@empresa.com.br",&#10;  ...&#10;}' style="min-height:180px;font-family:monospace;font-size:.78rem"></textarea>
+      <textarea class="nota-inp" id="json-input" placeholder='Cole aqui o conteúdo do campo "⚡ Abrir Simulador" do e-mail (o texto longo que começa com "eyI..."), ou o JSON exportado do Formspree' style="min-height:180px;font-family:monospace;font-size:.78rem"></textarea>
       <button class="btn-salvar" onclick="carregarJSON()">Carregar dados →</button>
       <span id="json-err" style="color:var(--vm);font-size:.78rem;margin-left:14px"></span>
     </div>
@@ -444,31 +444,36 @@ function aba(nome) {
 }
 
 function carregarJSON() {
-  const raw = document.getElementById('json-input').value.trim();
+  let raw = document.getElementById('json-input').value.trim();
   const err = document.getElementById('json-err');
+
+  // Aceitar link completo colado por engano
+  if (raw.includes('#dados=')) {
+    raw = raw.split('#dados=')[1];
+  }
+
+  // Aceitar base64 puro (começa com 'ey' = '{' em base64)
+  if (!raw.startsWith('{') && raw.length > 20) {
+    try {
+      const decoded = decodeURIComponent(escape(atob(raw)));
+      if (decoded.startsWith('{')) raw = decoded;
+    } catch(e2) {}
+  }
+
   try {
     dadosCliente = JSON.parse(raw);
     renderizarDados();
     renderizarProximasEtapas();
+    preencherSimuladorAuto();
     err.textContent = '✓ Dados carregados com sucesso.';
     err.style.color = 'var(--vd)';
-    // Pré-preencher % fornecedores simples se informado
-    if (dadosCliente['24_Perfil Fornecedores']==='Predominantemente Simples') {
-      document.getElementById('sim_simp').value = 60;
-    } else if (dadosCliente['24_Perfil Fornecedores']==='Misto') {
-      document.getElementById('sim_simp').value = 25;
-    }
-    // Pré-preencher % vedado se marcou hospedagem/alimentação
-    const ins = dadosCliente['23_Insumos Principais']||'';
-    if (ins.includes('Hospedagem') || ins.includes('Alimentação')) {
-      document.getElementById('sim_ved').value = 15;
-    }
     calcular();
   } catch(e) {
-    err.textContent = 'JSON inválido. Verifique o formato.';
+    err.textContent = 'Formato não reconhecido. Cole o texto do campo "⚡ Abrir Simulador" do e-mail (começa com "eyI...").';
     err.style.color = 'var(--vm)';
   }
 }
+
 
 function renderizarDados() {
   const d = dadosCliente;
