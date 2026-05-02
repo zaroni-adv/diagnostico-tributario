@@ -123,11 +123,43 @@ textarea.nota-inp:focus{outline:none;border-color:var(--vc)}
 hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
 
 @media print{
-  header,.tabs,.btn-print,.btn-salvar,.actions-row,.notas-int{print-color-adjust:exact;-webkit-print-color-adjust:exact}
-  .login-wrap{display:none}
-  body{background:#fff}
+  /* Ocultar elementos de interface */
+  header,.tabs,.btn-print,.btn-salvar,.actions-row,.notas-int,
+  #aba-dados,#aba-notas,.sim-box,.nota,.aguarda-sim{display:none!important}
+  /* Mostrar só o resultado */
+  #aba-simulador{display:block!important}
+  #resultado-sim{display:block!important}
+  .login-wrap{display:none!important}
+  body{background:#fff;font-size:11pt}
+  main{padding:0;max-width:100%}
+  /* Cabeçalho de impressão */
+  .print-header{display:block!important}
+  /* Rodapé de impressão */
+  .print-footer{display:block!important}
+  /* Ressalvas */
+  .print-ressalvas{display:block!important}
+  /* Evitar quebras ruins */
+  .tbl-wrap,.ab,.kpi,.ac{page-break-inside:avoid}
+  .kpi-grid{grid-template-columns:repeat(3,1fr)!important}
+  .acoes-grid{grid-template-columns:1fr 1fr!important}
+  /* Cores para impressão */
+  th{print-color-adjust:exact;-webkit-print-color-adjust:exact;background:#4a1420!important;color:#C9A84C!important}
+  .ab.danger,.ab.warn,.ab.ok{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .kpi{border:1pt solid #d8cfc2!important}
+  hr.dv{border-top:1pt solid #d8cfc2!important}
 }
-@media(max-width:640px){
+.print-header{display:none;margin-bottom:28pt;padding-bottom:14pt;border-bottom:2pt solid #C9A84C}
+.print-header-brand{font-family:Georgia,serif;font-size:18pt;font-weight:500;color:#4a1420;letter-spacing:.05em}
+.print-header-sub{font-size:8pt;color:#6b5c4e;letter-spacing:.15em;text-transform:uppercase;margin-top:3pt}
+.print-header-meta{font-size:8pt;color:#6b5c4e;line-height:1.8;text-align:right}
+.print-header-row{display:flex;justify-content:space-between;align-items:flex-end}
+.print-doc-title{font-family:Georgia,serif;font-size:14pt;color:#6B1E2E;font-weight:500;margin:10pt 0 3pt}
+.print-doc-sub{font-size:9pt;color:#6b5c4e}
+.print-footer{display:none;margin-top:28pt;padding-top:12pt;border-top:1pt solid #d8cfc2;font-size:7.5pt;color:#6b5c4e;line-height:1.7}
+.print-ressalvas{display:none;margin-top:20pt;background:#fdf5f0;border-left:3pt solid #C9A84C;padding:12pt 14pt;font-size:8pt;color:#6b5c4e;line-height:1.8;page-break-inside:avoid}
+.print-ressalvas strong{color:#2c1a10;display:block;margin-bottom:4pt;font-size:8.5pt}
+.print-ressalvas li{margin-bottom:3pt}
+@media(max-width:640px){@media(max-width:640px){
   header{padding:16px 18px;flex-direction:column;gap:10px;text-align:center}
   main{padding:28px 16px 60px}
   .inp-grid,.inp-grid3,.kpi-grid,.acoes-grid,.data-grid{grid-template-columns:1fr}
@@ -204,7 +236,26 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
 
     <div id="aguarda-sim" class="aguarda">Preencha Receita e Custo acima para gerar as estimativas de impacto.</div>
 
-    <div id="resultado-sim" style="display:none">
+    <!-- CABEÇALHO DE IMPRESSÃO (visível só no print) -->
+<div class="print-header" id="print-header">
+  <div class="print-header-row">
+    <div>
+      <div class="print-header-brand">Zaroni Advogados</div>
+      <div class="print-header-sub">OAB/RJ 105.247 &nbsp;|&nbsp; Rio de Janeiro &amp; São Paulo</div>
+    </div>
+    <div class="print-header-meta">
+      <div id="ph-data"></div>
+      <div>Documento de uso restrito</div>
+      <div>Diagnóstico preliminar — Reforma Tributária</div>
+    </div>
+  </div>
+  <div style="margin-top:12pt">
+    <div class="print-doc-title" id="ph-titulo">Diagnóstico de Impacto — Reforma Tributária</div>
+    <div class="print-doc-sub" id="ph-cliente"></div>
+  </div>
+</div>
+
+<div id="resultado-sim" style="display:none">
       <!-- KPIs -->
       <div class="kpi-grid" id="kpi-area"></div>
 
@@ -238,8 +289,43 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
       <div class="sec-title-sm">Plano de ação preliminar</div>
       <div class="acoes-grid" id="acoes"></div>
 
+      <!-- RESSALVAS METODOLÓGICAS (visíveis só no print) -->
+      <div class="print-ressalvas">
+        <strong>Ressalvas metodológicas e limitações deste diagnóstico</strong>
+        <ul style="padding-left:14pt;margin-top:4pt">
+          <li>Este documento constitui um <strong>diagnóstico tributário preliminar</strong> elaborado com base nas informações fornecidas pelo cliente por meio de questionário. Não substitui análise jurídica ou contábil aprofundada.</li>
+          <li>As <strong>alíquotas de IBS e CBS</strong> utilizadas (26,5% combinados) correspondem ao teto mínimo de referência previsto na Lei Complementar 214/2024. A alíquota definitiva será fixada por resolução do Senado Federal e pode diferir deste valor. As projeções para 2033 assumem a implementação plena da reforma sem alterações legislativas supervenientes.</li>
+          <li>O <strong>cálculo do Simples Nacional</strong> utiliza as tabelas dos Anexos I a V da LC 123/2006 e aplica a fórmula de alíquota efetiva real (RBAA × alíquota nominal − dedução) / RBAA. O Anexo aplicável foi identificado automaticamente com base no setor e na subatividade declarados.</li>
+          <li>O <strong>cálculo do Lucro Presumido</strong> aplica os percentuais de presunção previstos no RIR/1999 e na IN RFB 1.700/2017 para IRPJ e CSLL, acrescidos de PIS/COFINS cumulativo (3,65%) e ISS/ICMS estimado por setor. O adicional de IRPJ de 10% sobre o lucro que exceder R$ 60.000 por trimestre foi considerado.</li>
+          <li>O <strong>cálculo do Lucro Real</strong> utiliza a margem bruta declarada como proxy do lucro tributável. Na prática, o lucro real apurado tende a ser inferior à margem bruta (após despesas financeiras, administrativas e outras deduções permitidas), de modo que a carga efetiva real pode ser <em>menor</em> do que a estimada neste documento. A análise definitiva requer balancete detalhado.</li>
+          <li>O <strong>impacto no fluxo de caixa</strong> do split payment é estimado com base nos prazos médios de recebimento e pagamento declarados. A implementação do split payment pelo governo federal não tem data confirmada — as projeções assumem implementação a partir de 2027.</li>
+          <li>Os <strong>créditos de IBS/CBS</strong> foram estimados com base nos percentuais de insumos elegíveis declarados. Créditos de hospedagem e alimentação foram excluídos por vedação expressa da LC 214/2024. A apuração definitiva de créditos depende de parametrização sistêmica e de eventos específicos previstos na legislação.</li>
+          <li>Este diagnóstico <strong>não considera</strong> planejamento tributário, reorganizações societárias, benefícios fiscais específicos não declarados, regimes especiais ou impactos de tributos não abordados (INSS, IOF, CIDE, contribuições previdenciárias, entre outros).</li>
+          <li>A <strong>escolha do regime tributário</strong> (Simples Nacional, Lucro Presumido ou Lucro Real) deve ser realizada em conjunto com o contador da empresa, considerando o cenário completo de receitas, despesas, folha de pagamento e projeções futuras.</li>
+          <li>As informações contidas neste documento são <strong>confidenciais</strong> e destinadas exclusivamente ao cliente identificado no cabeçalho, para fins de diagnóstico preliminar interno.</li>
+        </ul>
+      </div>
+
+      <!-- RODAPÉ DE IMPRESSÃO -->
+      <div class="print-footer">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end">
+          <div>
+            <div style="font-weight:500;color:#2c1a10;margin-bottom:3pt">Zaroni Advogados</div>
+            <div>OAB/RJ 105.247 &nbsp;|&nbsp; CNPJ 12.773.366/0001-82</div>
+            <div>Rio de Janeiro &amp; São Paulo &nbsp;|&nbsp; zaroniadvogados.com.br</div>
+          </div>
+          <div style="text-align:right;font-style:italic">
+            <div>Diagnóstico elaborado com base nas informações</div>
+            <div>declaradas pelo cliente. Sujeito a revisão.</div>
+          </div>
+        </div>
+        <div style="margin-top:8pt;padding-top:6pt;border-top:0.5pt solid #d8cfc2;font-size:7pt;color:#888">
+          Este documento não constitui parecer jurídico ou opinião legal formal. Para análise completa, consulte os advogados do escritório Zaroni Advogados.
+        </div>
+      </div>
+
       <div class="actions-row">
-        <button class="btn-print" onclick="window.print()">⬇ Exportar / Imprimir</button>
+        <button class="btn-print" onclick="imprimirRelatorio()">⬇ Exportar / Imprimir</button>
       </div>
     </div>
   </div>
@@ -301,6 +387,24 @@ function preencherSimuladorAuto() {
   else if (setor.includes('Serviços')) cred = 55;
   else if (setor.includes('Tecnologia')) cred = 50;
   document.getElementById('sim_cred').value = cred;
+
+  // Pré-preencher receita com ponto médio da faixa informada
+  const fat = dadosCliente['09_Faturamento'] || '';
+  const mapaRec = {
+    'MEI': 270000, '360 mil': 2000000, '4,8 mi': 10000000,
+    '20 mi': 55000000, '100 mi': 150000000
+  };
+  let recSug = 0;
+  for (const [k, v] of Object.entries(mapaRec)) {
+    if (fat.includes(k)) { recSug = v; break; }
+  }
+  if (recSug) {
+    const rEl = document.getElementById('sim_rec');
+    const cEl = document.getElementById('sim_cust');
+    if (rEl && !rEl.value) rEl.value = recSug;
+    if (cEl && !cEl.value) cEl.value = Math.round(recSug * 0.65);
+    calcular();
+  }
 }
 
 // ── LOGIN ─────────────────────────────────────────────────
@@ -440,11 +544,187 @@ function calcular() {
   document.getElementById('resultado-sim').style.display='block';
   document.getElementById('aguarda-sim').style.display='none';
 
-  // Alíquotas
+  // ── TABELAS COMPLETAS DO SIMPLES NACIONAL (LC 123/2006 — vigentes 2024) ──
+  // Formato: [até, aliq_nominal, parcela_deduzir]
+  const ANEXO_I = [ // Comércio
+    [180000,   0.04,   0],      [360000,  0.073,  5940],
+    [720000,   0.095, 13860],   [1800000, 0.107, 22500],
+    [3600000,  0.143, 87300],   [4800000, 0.19,  378000]
+  ];
+  const ANEXO_II = [ // Indústria
+    [180000,   0.045,     0],   [360000,  0.078,  5940],
+    [720000,   0.1,   13860],   [1800000, 0.112, 22500],
+    [3600000,  0.147, 85500],   [4800000, 0.195, 378000]
+  ];
+  const ANEXO_III = [ // Serviços gerais (instalação, reparos, transporte, academias)
+    [180000,   0.06,      0],   [360000,  0.112,  9360],
+    [720000,   0.135, 17640],   [1800000, 0.16,  35640],
+    [3600000,  0.21, 125640],   [4800000, 0.33,  648000]
+  ];
+  const ANEXO_IV = [ // Serviços regulamentados (advocacia, medicina, engenharia, limpeza)
+    [180000,   0.045,     0],   [360000,  0.09,   8100],
+    [720000,   0.102, 12420],   [1800000, 0.14,  39780],
+    [3600000,  0.22, 183780],   [4800000, 0.33,  828000]
+  ];
+  const ANEXO_V = [ // Serviços intelectuais (TI, consultoria, publicidade, design)
+    [180000,   0.155,     0],   [360000,  0.18,   4500],
+    [720000,   0.195,  9900],   [1800000, 0.205, 17100],
+    [3600000,  0.23,  62100],   [4800000, 0.305, 540000]
+  ];
+
+  function calcAlqEfetiva(rbaa, tabela) {
+    // rbaa = Receita Bruta Acumulada dos últimos 12 meses
+    // Usa a faixa correspondente e aplica: alqEfetiva = (rbaa * alqNominal - deducao) / rbaa
+    for (const [limite, alqNom, ded] of tabela) {
+      if (rbaa <= limite) {
+        const alqEf = (rbaa * alqNom - ded) / rbaa;
+        return Math.max(0, alqEf);
+      }
+    }
+    // Acima da última faixa — usa a maior
+    const [, alqNom, ded] = tabela[tabela.length - 1];
+    return Math.max(0, (rbaa * alqNom - ded) / rbaa);
+  }
+
+  function identificarAnexo(dadosCliente) {
+    const setor = dadosCliente['18_Setor'] || '';
+    const sub   = dadosCliente['11b_Subatividade Serviços'] || '';
+    if (setor.includes('Comércio')) return { anexo: 'I', tabela: ANEXO_I };
+    if (setor.includes('Indústria')) return { anexo: 'II', tabela: ANEXO_II };
+    if (sub.includes('Anexo III')) return { anexo: 'III', tabela: ANEXO_III };
+    if (sub.includes('Anexo IV'))  return { anexo: 'IV',  tabela: ANEXO_IV };
+    if (sub.includes('Anexo V'))   return { anexo: 'V',   tabela: ANEXO_V };
+    // Inferência por setor quando subatividade não informada
+    if (setor.includes('Tecnologia') || setor.includes('Consultoria')) return { anexo: 'V', tabela: ANEXO_V };
+    if (setor.includes('Saúde') || setor.includes('Educação')) return { anexo: 'III', tabela: ANEXO_III };
+    if (setor.includes('Construção') || setor.includes('Limpeza')) return { anexo: 'IV', tabela: ANEXO_IV };
+    if (setor.includes('Logística') || setor.includes('Transporte')) return { anexo: 'III', tabela: ANEXO_III };
+    if (setor.includes('Serviços')) return { anexo: 'III', tabela: ANEXO_III }; // default serviços
+    return { anexo: 'III', tabela: ANEXO_III }; // fallback
+  }
+
+  // ── Alíquotas ──
   const CBS=0.088, IBS=0.177, TOT=CBS+IBS; // 26,5%
-  let alqAt = pc.includes('Cumulativo') ? 0.0365+0.05
-            : pc.includes('Não Cumulativo') ? 0.0925+0.05
-            : regime.includes('Simples') ? 0.12 : 0.0365+0.05;
+  let alqAt = 0;
+  let infoSimples = null;
+
+  if (regime.includes('Simples')) {
+    const { anexo, tabela } = identificarAnexo(d);
+    const alqEf = calcAlqEfetiva(rec, tabela);
+    alqAt = alqEf;
+    infoSimples = { anexo, alqEf };
+
+  } else if (regime.includes('Presumido')) {
+    // ── LUCRO PRESUMIDO — cálculo completo ──────────────────
+    // Percentual de presunção por atividade (RIR/1999 + IN RFB 1.700/2017)
+    const setor = d['18_Setor'] || '';
+    const sub   = d['11b_Subatividade Serviços'] || '';
+    let presIRPJ = 0.32; // default serviços em geral
+    let presCSLL = 0.32;
+    let iss = 0.05;      // ISS médio (municipal, varia de 2% a 5%)
+    let icms = 0;
+
+    if (setor.includes('Comércio')) {
+      presIRPJ = 0.08; presCSLL = 0.12; iss = 0; icms = 0.03; // ICMS estimado
+    } else if (setor.includes('Indústria')) {
+      presIRPJ = 0.08; presCSLL = 0.12; iss = 0; icms = 0.035;
+    } else if (setor.includes('Transporte') && !setor.includes('Passageiro')) {
+      presIRPJ = 0.08; presCSLL = 0.12; iss = 0.025;
+    } else if (setor.includes('Aviação') || setor.includes('Aéreo')) {
+      presIRPJ = 0.08; presCSLL = 0.12; iss = 0.025;
+    } else if (setor.includes('Logística')) {
+      presIRPJ = 0.08; presCSLL = 0.12; iss = 0.025;
+    } else if (setor.includes('Saúde') || setor.includes('Hospital')) {
+      presIRPJ = 0.08; presCSLL = 0.12; iss = 0.03;
+    } else if (setor.includes('Construção') || setor.includes('Imobiliário')) {
+      presIRPJ = 0.08; presCSLL = 0.12; iss = 0.03;
+    } else if (setor.includes('Tecnologia') || sub.includes('Anexo V')) {
+      presIRPJ = 0.32; presCSLL = 0.32; iss = 0.05;
+    } else if (setor.includes('Financeiro') || setor.includes('Seguro')) {
+      presIRPJ = 0.32; presCSLL = 0.32; iss = 0.05;
+    } else if (sub.includes('Anexo IV')) {
+      // Serviços regulamentados — advocacia, engenharia, contabilidade
+      presIRPJ = 0.32; presCSLL = 0.32; iss = 0.05;
+    }
+
+    // IRPJ: 15% sobre base presumida + 10% adicional sobre excedente trimestral
+    const baseIRPJ = rec * presIRPJ;
+    const limiteAdicional = 240000; // R$ 60k/trimestre × 4
+    const irpj = baseIRPJ * 0.15 + Math.max(0, baseIRPJ - limiteAdicional) * 0.10;
+
+    // CSLL: 9% sobre base presumida
+    const csll = rec * presCSLL * 0.09;
+
+    // PIS/COFINS cumulativo
+    const pisCofins = rec * 0.0365;
+
+    // ISS ou ICMS
+    const issOuIcms = rec * (iss + icms);
+
+    const totalImpostos = irpj + csll + pisCofins + issOuIcms;
+    alqAt = totalImpostos / rec;
+
+    infoSimples = {
+      anexo: 'LP',
+      alqEf: alqAt,
+      detalhe: {
+        irpj: irpj/rec, csll: csll/rec,
+        pisCofins: pisCofins/rec, issOuIcms: issOuIcms/rec,
+        presIRPJ, presCSLL
+      }
+    };
+
+  } else if (regime.includes('Real') || pc.includes('Não Cumulativo')) {
+    // ── LUCRO REAL — cálculo completo ────────────────────────
+    // No LR, IRPJ e CSLL incidem sobre o lucro real apurado (receita - despesas)
+    // Usamos a margem bruta informada como proxy da margem tributável
+    // (conservador — margem líquida real seria menor, mas não temos despesas financeiras/admin)
+
+    const setor    = d['18_Setor'] || '';
+    const margemPct = parseFloat(d['19_Margem'] || '20') / 100;
+
+    // ISS ou ICMS por setor (igual ao Presumido)
+    let iss = 0.05; let icms = 0;
+    if (setor.includes('Comércio'))                          { iss = 0;     icms = 0.03;  }
+    else if (setor.includes('Indústria'))                    { iss = 0;     icms = 0.035; }
+    else if (setor.includes('Transporte')||setor.includes('Aviação')||setor.includes('Logística')) { iss = 0.025; }
+    else if (setor.includes('Saúde')||setor.includes('Construção')||setor.includes('Imobiliário')) { iss = 0.03;  }
+
+    // PIS/COFINS não-cumulativo: 9,25% sobre receita, com crédito dos insumos
+    // O crédito já é calculado separado no simulador (credEfet)
+    // Aqui lançamos o débito bruto — o crédito compensa na apuração
+    const pisCofins = rec * 0.0925;
+
+    // Base tributável do IRPJ/CSLL = lucro antes do IR
+    // Estimamos como: receita × margem bruta − PIS/COFINS − ISS/ICMS
+    // (simplificação conservadora — despesas operacionais abaixo do lucro bruto não são capturadas)
+    const baseLucro = Math.max(0, rec * margemPct - pisCofins - rec * (iss + icms));
+
+    // IRPJ: 15% + 10% adicional sobre lucro > R$ 240k/ano
+    const irpj = baseLucro * 0.15 + Math.max(0, baseLucro - 240000) * 0.10;
+
+    // CSLL: 9% para pessoas jurídicas em geral (15% para financeiras/seguros)
+    const csllAlq = setor.includes('Financeiro') || setor.includes('Seguro') ? 0.15 : 0.09;
+    const csll = baseLucro * csllAlq;
+
+    const issOuIcms = rec * (iss + icms);
+    const totalImpostos = irpj + csll + pisCofins + issOuIcms;
+    alqAt = totalImpostos / rec;
+
+    infoSimples = {
+      anexo: 'LR',
+      alqEf: alqAt,
+      detalhe: {
+        irpj: irpj/rec, csll: csll/rec,
+        pisCofins: pisCofins/rec, issOuIcms: issOuIcms/rec,
+        margem: margemPct
+      }
+    };
+
+  } else {
+    // Fallback — LP cumulativo sem info suficiente
+    alqAt = 0.0365 + 0.05;
+  }
 
   const impAt    = rec*alqAt;
   const impCBS27 = rec*CBS;
@@ -470,7 +750,13 @@ function calcular() {
     <div class="kpi ${Math.abs(varMarg)<2?'neu':varMarg>0?'pos':'neg'}">
       <div class="kl">Variação de Margem</div>
       <div class="kv">${varMarg>=0?'+':''}${fp(varMarg)}</div>
-      <div class="ks">vs. hoje · em 2033</div>
+      <div class="ks">${(infoSimples && infoSimples.anexo === 'LP')
+      ? 'Lucro Presumido · alíq. efetiva ' + (infoSimples.alqEf*100).toFixed(2) + '%'
+      : (infoSimples && infoSimples.anexo === 'LR')
+        ? 'Lucro Real · alíq. efetiva ' + (infoSimples.alqEf*100).toFixed(2) + '% (margem ' + (infoSimples.detalhe.margem*100).toFixed(0) + '%)'
+        : infoSimples
+          ? 'Simples Anexo ' + infoSimples.anexo + ' · alíq. efetiva ' + (infoSimples.alqEf*100).toFixed(2) + '%'
+          : 'vs. hoje · em 2033'}</div>
     </div>
     <div class="kpi neu">
       <div class="kl">Crédito Anual Estimado</div>
@@ -486,7 +772,13 @@ function calcular() {
   document.getElementById('tbl-carga').innerHTML=`
     <thead><tr><th>Cenário</th><th>Tributos s/ Receita</th><th>(-) Créditos</th><th>Carga Líquida</th><th>% Receita</th></tr></thead>
     <tbody>
-      <tr><td><strong>Hoje (2025)</strong></td><td class="nr">${fm(impAt)}</td><td class="nr nt">—</td><td class="nr"><strong>${fm(impAt)}</strong></td><td class="nr">${fp(alqAt*100)}</td></tr>
+      <tr><td><strong>Hoje (2025)</strong>${(infoSimples && infoSimples.anexo === 'LP')
+      ? '<br><small style="color:#888;font-size:.75rem">Lucro Presumido — IRPJ+CSLL+PIS/COFINS+ISS/ICMS</small>'
+      : (infoSimples && infoSimples.anexo === 'LR')
+        ? '<br><small style="color:#888;font-size:.75rem">Lucro Real — IRPJ+CSLL+PIS/COFINS não-cum.+ISS/ICMS</small>'
+        : infoSimples
+          ? '<br><small style="color:#888;font-size:.75rem">Simples Anexo ' + infoSimples.anexo + ' — alíq. efetiva real</small>'
+          : ''}</td><td class="nr">${fm(impAt)}</td><td class="nr nt">—</td><td class="nr"><strong>${fm(impAt)}</strong></td><td class="nr">${fp(alqAt*100)}</td></tr>
       <tr><td><strong>2027 (CBS entra)</strong></td><td class="nr">${fm(impCBS27)}</td><td class="nr gn">-${fm(credEfet*(CBS/TOT))}</td><td class="nr"><strong>${fm(impLiq27)}</strong></td><td class="nr">${fp((impLiq27/rec)*100)}</td></tr>
       <tr class="tr-tot"><td><strong>2033 (Pleno)</strong></td><td class="nr">${fm(impTot33)}</td><td class="nr gn">-${fm(credEfet)}</td><td class="nr"><strong>${fm(impLiq33)}</strong></td><td class="nr">${fp((impLiq33/rec)*100)}</td></tr>
     </tbody>`;
@@ -539,6 +831,34 @@ function calcular() {
 }
 
 // ── NOTAS INTERNAS ────────────────────────────────────────
+function imprimirRelatorio() {
+  const d = dadosCliente;
+
+  // Preenche cabeçalho de impressão com dados do cliente
+  const dataAtual = new Date().toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+  const el = id => document.getElementById(id);
+
+  if (el('ph-data'))    el('ph-data').textContent    = dataAtual;
+  if (el('ph-titulo'))  el('ph-titulo').textContent  = 'Diagnóstico de Impacto — Reforma Tributária';
+  if (el('ph-cliente')) {
+    const empresa = d['01_Razão Social'] || '—';
+    const cnpj    = d['03_CNPJ']         || '';
+    const contato = d['05_Contato']      || '';
+    const regime  = d['12_Regime']       || '';
+    const setor   = d['18_Setor']        || '';
+    el('ph-cliente').innerHTML =
+      '<strong>' + empresa + '</strong>' +
+      (cnpj    ? ' &nbsp;|&nbsp; CNPJ: ' + cnpj    : '') +
+      (contato ? ' &nbsp;|&nbsp; Contato: ' + contato : '') +
+      '<br>' +
+      (setor   ? setor   + ' &nbsp;|&nbsp; ' : '') +
+      (regime  ? regime : '');
+  }
+
+  // Pequeno delay para o DOM atualizar antes do print
+  setTimeout(() => window.print(), 150);
+}
+
 function salvarNotas() {
   const txt = document.getElementById('notas-txt').value;
   const cliente = dadosCliente['03_CNPJ']||'sem_cnpj';
