@@ -370,45 +370,62 @@ function lerDadosDoLink() {
 
 // ── PRÉ-PREENCHE SIMULADOR COM BASE NAS RESPOSTAS ─────────
 function preencherSimuladorAuto() {
-  const perf = dadosCliente['24_Perfil Fornecedores'] || '';
-  if (perf === 'Predominantemente Simples') document.getElementById('sim_simp').value = 60;
-  else if (perf === 'Misto') document.getElementById('sim_simp').value = 25;
-  else document.getElementById('sim_simp').value = 0;
+  const d = dadosCliente;
 
-  const ins = dadosCliente['23_Insumos Principais'] || '';
-  let ved = 0;
-  if (ins.includes('Hospedagem') && ins.includes('Alimentação')) ved = 20;
-  else if (ins.includes('Hospedagem') || ins.includes('Alimentação')) ved = 10;
-  document.getElementById('sim_ved').value = ved;
+  // ── Receita e custo — vêm direto do formulário ──
+  const recExata  = parseFloat(d['08b_Receita Bruta Anual R$'] || '') || 0;
+  const custExato = parseFloat(d['08c_Custo Direto Anual R$']  || '') || 0;
+  const rEl = document.getElementById('sim_rec');
+  const cEl = document.getElementById('sim_cust');
+  if (rEl && recExata > 0)  rEl.value = recExata;
+  if (cEl && custExato > 0) cEl.value = custExato;
 
-  const setor = dadosCliente['18_Setor'] || '';
-  let cred = 65;
-  if (setor.includes('Comércio')) cred = 75;
-  else if (setor.includes('Indústria')) cred = 80;
-  else if (setor.includes('Serviços')) cred = 55;
-  else if (setor.includes('Tecnologia')) cred = 50;
-  document.getElementById('sim_cred').value = cred;
-
-  // Pré-preencher receita com ponto médio da faixa informada
-  const fat = dadosCliente['09_Faturamento'] || '';
-  const mapaRec = {
-    'MEI': 270000, '360 mil': 2000000, '4,8 mi': 10000000,
-    '20 mi': 55000000, '100 mi': 150000000
-  };
-  let recSug = 0;
-  for (const [k, v] of Object.entries(mapaRec)) {
-    if (fat.includes(k)) { recSug = v; break; }
+  // ── % fornecedores Simples — campo numérico exato ──
+  const pctSimpNum = parseFloat(d['24b_% Fornecedores Simples'] || '');
+  const simpEl = document.getElementById('sim_simp');
+  if (simpEl) {
+    if (!isNaN(pctSimpNum) && pctSimpNum >= 0) simpEl.value = pctSimpNum;
+    else {
+      // Fallback pelo perfil textual
+      const perf = d['24_Perfil Fornecedores'] || '';
+      if (perf.includes('Predominantemente Simples')) simpEl.value = 60;
+      else if (perf.includes('Misto')) simpEl.value = 25;
+      else simpEl.value = 0;
+    }
   }
-  if (recSug) {
-    const rEl = document.getElementById('sim_rec');
-    const cEl = document.getElementById('sim_cust');
-    if (rEl && !rEl.value) rEl.value = recSug;
-    if (cEl && !cEl.value) cEl.value = Math.round(recSug * 0.65);
-    calcular();
+
+  // ── % crédito elegível — calculado a partir dos percentuais de custo ──
+  const pMerc  = parseFloat(d['23a_Custo Mercadorias %'] || '') || 0;
+  const pFolha = parseFloat(d['23b_Custo Folha %']       || '') || 0;
+  const pServ  = parseFloat(d['23c_Custo Serviços %']    || '') || 0;
+  const pHosp  = parseFloat(d['23d_Custo Hospedagem %']  || '') || 0;
+  const pAlim  = parseFloat(d['23e_Custo Alimentação %'] || '') || 0;
+  const pOut   = parseFloat(d['23f_Custo Outros %']      || '') || 0;
+
+  // Elegível = tudo exceto folha (não tributada), hospedagem e alimentação (vedadas)
+  const pCredEl = pMerc + pServ + pOut;
+  const pVedado = pHosp + pAlim;
+  const credEl  = document.getElementById('sim_cred');
+  const vedEl   = document.getElementById('sim_ved');
+
+  if (credEl && pCredEl > 0) credEl.value = pCredEl;
+  else if (credEl) {
+    // Fallback por setor se percentuais não informados
+    const setor = d['18_Setor'] || '';
+    let cred = 65;
+    if (setor.includes('Comércio')) cred = 75;
+    else if (setor.includes('Indústria')) cred = 80;
+    else if (setor.includes('Serviços')) cred = 55;
+    else if (setor.includes('Tecnologia')) cred = 50;
+    credEl.value = cred;
   }
+  if (vedEl && pVedado > 0) vedEl.value = pVedado;
+  else if (vedEl) vedEl.value = 0;
+
+  calcular();
 }
 
-// ── LOGIN ─────────────────────────────────────────────────
+
 function login() {
   const s = document.getElementById('inp-senha').value;
   if (s === SENHA) {
