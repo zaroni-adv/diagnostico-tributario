@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Simulador Interno — Zaroni Advogados</title>
+<title>Zaroni Reforma 360° — Simulador de Transição Tributária</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap');
 :root{
@@ -63,6 +63,8 @@ main{max-width:900px;margin:0 auto;padding:40px 28px 90px}
 .ht{display:block;font-weight:300;color:var(--tl);font-size:.72rem;margin-top:2px}
 input[type=number]{width:100%;padding:10px 13px;border:1px solid var(--b);border-radius:4px;background:var(--w);font-family:var(--sans);font-size:.86rem;color:var(--t)}
 input[type=number]:focus{outline:none;border-color:var(--vc);box-shadow:0 0 0 3px rgba(107,30,46,.08)}
+select{width:100%;padding:10px 13px;border:1px solid var(--b);border-radius:4px;background:var(--w);font-family:var(--sans);font-size:.86rem;color:var(--t)}
+select:focus{outline:none;border-color:var(--vc);box-shadow:0 0 0 3px rgba(107,30,46,.08)}
 .nota{background:linear-gradient(135deg,#fdf5f0,#faf0ec);border:1px solid var(--b);border-radius:6px;padding:18px 22px;margin-bottom:24px;font-size:.82rem;color:var(--tl);line-height:1.7}
 .nota strong{color:var(--t)}
 
@@ -173,7 +175,7 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
 <header>
   <div>
     <div class="brand">Zaroni Advogados</div>
-    <div class="brand-sub">Painel Interno — Reforma Tributária</div>
+    <div class="brand-sub">Zaroni Reforma 360° — Transição &amp; Enquadramento</div>
   </div>
   <div class="meta"><div>Acesso Restrito</div><div class="badge">Uso Interno</div></div>
 </header>
@@ -192,8 +194,8 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
 <!-- PAINEL PRINCIPAL -->
 <div id="painel" style="display:none">
 <main>
-  <div class="page-title">Simulador de Diagnóstico</div>
-  <p class="page-sub">Cole as respostas recebidas por e-mail e execute o simulador de impacto da reforma tributária.</p>
+  <div class="page-title">Zaroni Reforma 360°</div>
+  <p class="page-sub">Simulador de transição e enquadramento tributário — Simples, Presumido e Real sob a Reforma (IBS · CBS · IS).</p>
 
   <div class="tabs">
     <button class="tab active" onclick="aba('dados')">① Dados do Cliente</button>
@@ -219,7 +221,7 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
   <!-- ABA 2: SIMULADOR -->
   <div id="aba-simulador" style="display:none">
     <div class="nota">
-      <strong>Nota metodológica:</strong> alíquota de referência de <strong>26,5%</strong> para IBS+CBS (teto mínimo conforme LC 214/2024 — alíquota definitiva a ser fixada pelo Senado no 2º semestre de 2025). Os resultados são estimativas orientativas. A escolha do regime tributário deve ser feita com o contador da empresa.
+      <strong>Nota metodológica:</strong> alíquota de referência de <strong>26,5%</strong> para IBS+CBS (teto mínimo conforme LC 214/2024 — alíquota definitiva a ser fixada pelo Senado no 2º semestre de 2025). Os resultados são estimativas orientativas. A escolha do regime tributário deve ser feita com o contador da empresa. Esta versão adiciona o <strong>Imposto Seletivo (IS)</strong>, a <strong>segmentação B2B/B2C</strong>, o <strong>comparativo entre Simples, Presumido e Real</strong> e o <strong>teste de enquadramento</strong> no Simples.
     </div>
 
     <div class="sim-box">
@@ -233,6 +235,38 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
         <div class="fg"><label class="lbl">% do custo de fornecedores no Simples<span class="ht">Esses não gerarão crédito automático</span></label><input type="number" id="sim_simp" value="0" min="0" max="100" oninput="calcular()"></div>
         <div class="fg"><label class="lbl">% do custo sem crédito (vedado)<span class="ht">Hospedagem e alimentação — vedados pela LC 214</span></label><input type="number" id="sim_ved" value="0" min="0" max="100" oninput="calcular()"></div>
       </div>
+    </div>
+
+    <div class="sim-box">
+      <div class="sim-box-title">Perfil de venda e crescimento</div>
+      <div class="inp-grid">
+        <div class="fg"><label class="lbl">% da receita para consumidor final — B2C<span class="ht">Parcela não tomadora de crédito: sofre o aumento de preço cheio. O restante (B2B) é creditável pelo adquirente.</span></label><input type="number" id="sim_b2c" value="0" min="0" max="100" oninput="calcular()"></div>
+        <div class="fg"><label class="lbl">Crescimento anual esperado da receita (%)<span class="ht">Usado no teste de enquadramento e desenquadramento do Simples</span></label><input type="number" id="sim_cresc" value="0" min="0" max="100" oninput="calcular()"></div>
+      </div>
+    </div>
+
+    <div class="sim-box">
+      <div class="sim-box-title">Imposto Seletivo (IS)</div>
+      <div class="inp-grid3">
+        <div class="fg"><label class="lbl">Atividade sujeita ao IS?<span class="ht">EC 132/2023 · LC 214/2024 — bens/serviços prejudiciais à saúde ou ao meio ambiente</span></label>
+          <select id="sim_is" onchange="calcular()">
+            <option value="nao">Não — expressar não incidência</option>
+            <option value="sim">Sim — parametrizar</option>
+          </select></div>
+        <div class="fg"><label class="lbl">Categoria<span class="ht">Referência: LC 214/2024</span></label>
+          <select id="sim_is_cat" onchange="calcular()">
+            <option value="">—</option>
+            <option>Veículos automotores</option>
+            <option>Embarcações e aeronaves</option>
+            <option>Produtos fumígenos</option>
+            <option>Bebidas alcoólicas</option>
+            <option>Bebidas açucaradas</option>
+            <option>Bens minerais extraídos (teto 1%)</option>
+            <option>Concursos de prognósticos / fantasy</option>
+          </select></div>
+        <div class="fg"><label class="lbl">Alíquota de IS estimada (%)<span class="ht">Extração mineral: teto de 1% (CF art. 153, §6º, III). Demais: a definir em lei ordinária.</span></label><input type="number" id="sim_is_aliq" value="0" min="0" step="0.1" oninput="calcular()"></div>
+      </div>
+      <div class="fg" style="margin-top:14px;max-width:360px"><label class="lbl">% da receita sujeita ao IS<span class="ht">Se apenas parte do faturamento é de produtos sujeitos ao Seletivo</span></label><input type="number" id="sim_is_base" value="100" min="0" max="100" oninput="calcular()"></div>
     </div>
 
     <div id="aguarda-sim" class="aguarda">Preencha Receita e Custo acima para gerar as estimativas de impacto.</div>
@@ -276,6 +310,22 @@ hr.dv{border:none;border-top:1px solid var(--b);margin:28px 0}
       <div class="tbl-wrap">
         <div class="tbl-title">Impacto no fluxo de caixa — Split Payment</div>
         <table id="tbl-caixa"></table>
+      </div>
+
+      <!-- ═══ ZARONI REFORMA 360 — MÓDULOS ═══ -->
+      <div id="bloco-enq"></div>
+
+      <div class="tbl-wrap" id="wrap-triregime" style="display:none">
+        <div class="tbl-title">Comparativo entre regimes — Simples, Presumido e Real (carga atual)</div>
+        <table id="tbl-triregime"></table>
+        <div class="nt" style="font-size:.76rem;margin-top:6px">No cenário pós-Reforma, o IBS/CBS (26,5%) incide igualmente sobre Lucro Presumido e Real; no Simples, aplica-se a decisão sobre o regime híbrido de IBS/CBS.</div>
+      </div>
+
+      <div id="bloco-is"></div>
+
+      <div class="tbl-wrap" id="wrap-b2b" style="display:none">
+        <div class="tbl-title">Impacto por perfil de venda — B2B vs. B2C</div>
+        <table id="tbl-b2b"></table>
       </div>
 
       <hr class="dv">
@@ -423,6 +473,18 @@ function preencherSimuladorAuto() {
   }
   if (vedEl && pVedado > 0) vedEl.value = pVedado;
   else if (vedEl) vedEl.value = 0;
+
+  // ── % B2C (consumidor final) a partir do perfil de venda ──
+  const b2cEl = document.getElementById('sim_b2c');
+  if (b2cEl) {
+    const pv = d['29_Perfil Venda'] || '';
+    const cr = d['30_Clientes Tomam Crédito'] || '';
+    let b2c = 0;
+    if (pv.includes('B2C') && !pv.includes('B2B')) b2c = 100;
+    else if (pv.includes('Misto') || pv.includes('B2C')) b2c = 40;
+    if (cr.includes('Não')) b2c = Math.max(b2c, 80);
+    b2cEl.value = b2c;
+  }
 
   calcular();
 }
@@ -854,6 +916,114 @@ function calcular() {
       <div class="at">${a.t}</div>
       <span class="ap ${a.p==='alta'?'pa':a.p==='media'?'pm':'pb'}">${a.p==='alta'?'Prioridade Alta':a.p==='media'?'Prioridade Média':'Monitoramento'}</span>
     </div>`).join('');
+
+  try{ reforma360(); }catch(e){ console.error('reforma360', e); }
+}
+
+/* ═══════════════ ZARONI REFORMA 360 — MÓDULOS ADICIONAIS ═══════════════ */
+const Z_TETO=4800000, Z_SUB=3600000, Z_TOT=0.265;
+const Z_ANX={
+ I:[[180000,.04,0],[360000,.073,5940],[720000,.095,13860],[1800000,.107,22500],[3600000,.143,87300],[4800000,.19,378000]],
+ II:[[180000,.045,0],[360000,.078,5940],[720000,.1,13860],[1800000,.112,22500],[3600000,.147,85500],[4800000,.195,378000]],
+ III:[[180000,.06,0],[360000,.112,9360],[720000,.135,17640],[1800000,.16,35640],[3600000,.21,125640],[4800000,.33,648000]],
+ IV:[[180000,.045,0],[360000,.09,8100],[720000,.102,12420],[1800000,.14,39780],[3600000,.22,183780],[4800000,.33,828000]],
+ V:[[180000,.155,0],[360000,.18,4500],[720000,.195,9900],[1800000,.205,17100],[3600000,.23,62100],[4800000,.305,540000]]};
+function _zAlqEf(r,t){for(const x of t){if(r<=x[0])return Math.max(0,(r*x[1]-x[2])/r);}const y=t[t.length-1];return Math.max(0,(r*y[1]-y[2])/r);}
+function _zAnexo(d){const s=d['18_Setor']||'',sub=d['11b_Subatividade Serviços']||'';
+ if(s.includes('Comércio'))return'I';if(s.includes('Indústria'))return'II';
+ if(sub.includes('Anexo III'))return'III';if(sub.includes('Anexo IV'))return'IV';if(sub.includes('Anexo V'))return'V';
+ if(s.includes('Tecnologia')||s.includes('Consultoria'))return'V';
+ if(s.includes('Saúde')||s.includes('Educação'))return'III';
+ if(s.includes('Construção')||s.includes('Limpeza'))return'IV';
+ if(s.includes('Logística')||s.includes('Transporte'))return'III';return'III';}
+function _zSimples(r,d){if(r>Z_TETO)return{ok:false,label:'Inelegível (> R$ 4,8 mi)',total:null,alq:null};const a=_zAnexo(d),alq=_zAlqEf(r,Z_ANX[a]);return{ok:true,label:'Anexo '+a,total:r*alq,alq};}
+function _zLPpar(d){const s=d['18_Setor']||'';let pI=.32,pC=.32,iss=.05,icms=0;
+ if(s.includes('Comércio')){pI=.08;pC=.12;iss=0;icms=.03;}
+ else if(s.includes('Indústria')){pI=.08;pC=.12;iss=0;icms=.035;}
+ else if(s.includes('Transporte')||s.includes('Aviação')||s.includes('Logística')){pI=.08;pC=.12;iss=.025;}
+ else if(s.includes('Saúde')||s.includes('Construção')||s.includes('Imobiliário')){pI=.08;pC=.12;iss=.03;}
+ return{pI,pC,iss,icms};}
+function _zLP(r,d){const p=_zLPpar(d);const bIR=r*p.pI;const irpj=bIR*.15+Math.max(0,bIR-240000)*.10;const csll=r*p.pC*.09;const pc=r*.0365;const ii=r*(p.iss+p.icms);const tot=irpj+csll+pc+ii;return{total:tot,alq:tot/r};}
+function _zLR(r,d){const s=d['18_Setor']||'';const m=parseFloat(d['19_Margem']||'20')/100;let iss=.05,icms=0;
+ if(s.includes('Comércio')){iss=0;icms=.03;}else if(s.includes('Indústria')){iss=0;icms=.035;}
+ else if(s.includes('Transporte')||s.includes('Aviação')||s.includes('Logística')){iss=.025;}
+ else if(s.includes('Saúde')||s.includes('Construção')||s.includes('Imobiliário')){iss=.03;}
+ const pc=r*.0925;const base=Math.max(0,r*m-pc-r*(iss+icms));const irpj=base*.15+Math.max(0,base-240000)*.10;
+ const csll=base*((s.includes('Financeiro')||s.includes('Seguro'))?.15:.09);const ii=r*(iss+icms);const tot=irpj+csll+pc+ii;return{total:tot,alq:tot/r};}
+function _zAlqAtual(r,d){const rg=d['12_Regime']||'';if(rg.includes('Simples')){const x=_zSimples(r,d);return x.ok?x.alq:_zLP(r,d).alq;}if(rg.includes('Presumido'))return _zLP(r,d).alq;if(rg.includes('Real'))return _zLR(r,d).alq;return _zLP(r,d).alq;}
+function _zEnq(r,cresc){let st,cls;
+ if(r<=Z_SUB){st='Dentro do Simples Nacional — ICMS/ISS recolhidos dentro do regime.';cls='ok';}
+ else if(r<=Z_TETO){st='Acima do sublimite (R$ 3,6 mi) — ICMS/ISS passam a ser recolhidos por fora do Simples.';cls='warn';}
+ else{st='Acima do teto (R$ 4,8 mi) — desenquadramento obrigatório para Lucro Presumido ou Real.';cls='danger';}
+ const g=cresc/100;let aTeto=null,aSub=null;if(g>0){if(r<Z_TETO)aTeto=Math.log(Z_TETO/r)/Math.log(1+g);if(r<Z_SUB)aSub=Math.log(Z_SUB/r)/Math.log(1+g);}
+ return{st,cls,aTeto,aSub};}
+const _zf=v=>'R$ '+Number(v).toLocaleString('pt-BR',{maximumFractionDigits:0});
+const _zp=v=>Number(v).toFixed(1)+'%';
+
+function reforma360(){
+ const g=id=>document.getElementById(id);
+ const rec=parseFloat(g('sim_rec')&&g('sim_rec').value)||0, cust=parseFloat(g('sim_cust')&&g('sim_cust').value)||0;
+ if(!rec||!cust)return;
+ const pCred=Math.min(100,parseFloat(g('sim_cred')&&g('sim_cred').value)||70)/100;
+ const pSimp=Math.min(100,parseFloat(g('sim_simp')&&g('sim_simp').value)||0)/100;
+ const pB2C=Math.min(100,parseFloat(g('sim_b2c')&&g('sim_b2c').value)||0)/100;
+ const cresc=parseFloat(g('sim_cresc')&&g('sim_cresc').value)||0;
+ const isOn=(g('sim_is')&&g('sim_is').value)==='sim';
+ const isAliq=parseFloat(g('sim_is_aliq')&&g('sim_is_aliq').value)||0;
+ const isBase=Math.min(100,parseFloat(g('sim_is_base')&&g('sim_is_base').value)||100)/100;
+ const isCat=(g('sim_is_cat')&&g('sim_is_cat').value)||'';
+ const d=dadosCliente, regime=d['12_Regime']||'';
+
+ // ── Enquadramento ──
+ const enq=_zEnq(rec,cresc), ehSimples=regime.includes('Simples');
+ let projTxt='';
+ const parts=[];
+ if(enq.aSub!==null&&enq.aSub>0)parts.push('cruza o sublimite de R$ 3,6 mi em ~'+enq.aSub.toFixed(1)+' ano(s)');
+ if(enq.aTeto!==null&&enq.aTeto>0)parts.push('atinge o teto de R$ 4,8 mi em ~'+enq.aTeto.toFixed(1)+' ano(s)');
+ if(parts.length)projTxt=' Com crescimento de '+cresc+'% a.a., a receita '+parts.join(' e ')+'.';
+ g('bloco-enq').innerHTML='<div class="sec-title-sm">'+(ehSimples?'Teste de enquadramento no Simples Nacional':'Elegibilidade ao Simples Nacional (referência)')+'</div>'+
+  '<div class="ab '+enq.cls+'"><strong>Receita bruta anual (RBT12): '+_zf(rec)+'</strong>'+enq.st+projTxt+'</div>'+
+  '<div class="tbl-wrap"><table><thead><tr><th>Limite</th><th>Valor</th><th>Situação</th></tr></thead><tbody>'+
+  '<tr><td>Sublimite (ICMS/ISS)</td><td class="nr">'+_zf(Z_SUB)+'</td><td class="nr '+(rec<=Z_SUB?'gn':'rd')+'">'+(rec<=Z_SUB?_zf(Z_SUB-rec)+' de folga':'excedido em '+_zf(rec-Z_SUB))+'</td></tr>'+
+  '<tr><td>Teto do Simples</td><td class="nr">'+_zf(Z_TETO)+'</td><td class="nr '+(rec<=Z_TETO?'gn':'rd')+'">'+(rec<=Z_TETO?_zf(Z_TETO-rec)+' de folga':'excedido em '+_zf(rec-Z_TETO))+'</td></tr>'+
+  '</tbody></table></div>';
+
+ // ── Comparativo tri-regime ──
+ const sn=_zSimples(rec,d), lp=_zLP(rec,d), lr=_zLR(rec,d);
+ const cur=regime.includes('Simples')?'SN':regime.includes('Presumido')?'LP':regime.includes('Real')?'LR':'';
+ const row=(k,nome,o)=>{const isCur=k===cur;const val=o.total==null?'<span class="nt">'+o.label+'</span>':_zf(o.total);const pct=o.alq==null?'—':_zp(o.alq*100);
+  return '<tr'+(isCur?' class="tr-tot"':'')+'><td>'+nome+(isCur?' <strong>(atual)</strong>':'')+(o.label&&o.total!=null?' <small style="color:#888">'+o.label+'</small>':'')+'</td><td class="nr">'+val+'</td><td class="nr">'+pct+'</td></tr>';};
+ g('tbl-triregime').innerHTML='<thead><tr><th>Regime</th><th>Carga atual (R$/ano)</th><th>% Receita</th></tr></thead><tbody>'+
+  row('SN','Simples Nacional',sn)+row('LP','Lucro Presumido',lp)+row('LR','Lucro Real',lr)+'</tbody>';
+ g('wrap-triregime').style.display='block';
+
+ // ── Imposto Seletivo ──
+ const credEfet=(cust*pCred-cust*pCred*pSimp)*Z_TOT;
+ const impLiq33=Math.max(0,rec*Z_TOT-credEfet);
+ if(!isOn||isAliq<=0){
+  g('bloco-is').innerHTML='<div class="sec-title-sm">Imposto Seletivo (IS)</div><div class="ab ok"><strong>Não incidente sobre a atividade declarada</strong>Nenhum acréscimo às projeções a título de Imposto Seletivo. O IS (EC 132/2023; LC 214/2024) alcança apenas bens e serviços prejudiciais à saúde ou ao meio ambiente. Caso a atividade venha a ser enquadrada, parametrizar no painel.</div>';
+ }else{
+  const isRev=rec*isBase, isVal=isRev*(isAliq/100), isNaBase=isVal*Z_TOT, cargaCom=impLiq33+isVal+isNaBase;
+  g('bloco-is').innerHTML='<div class="sec-title-sm">Imposto Seletivo (IS)'+(isCat?' — '+isCat:'')+'</div>'+
+   '<div class="tbl-wrap"><table><thead><tr><th>Componente</th><th>Base / Alíquota</th><th>Valor anual</th></tr></thead><tbody>'+
+   '<tr><td>Receita sujeita ao IS</td><td class="nr">'+_zp(isBase*100)+' da receita</td><td class="nr">'+_zf(isRev)+'</td></tr>'+
+   '<tr><td>Imposto Seletivo</td><td class="nr">'+isAliq.toFixed(1)+'%</td><td class="nr rd">'+_zf(isVal)+'</td></tr>'+
+   '<tr><td>Efeito do IS na base de IBS/CBS <small style="color:#888">(o IS integra a base)</small></td><td class="nr">26,5%</td><td class="nr rd">'+_zf(isNaBase)+'</td></tr>'+
+   '<tr class="tr-tot"><td>Carga 2033 consolidada (IBS/CBS líq. + IS)</td><td class="nr">—</td><td class="nr">'+_zf(cargaCom)+'</td></tr>'+
+   '</tbody></table></div>'+
+   '<div class="ab warn"><strong>Nota sobre a alíquota</strong>O IS é não creditável e integra a base de cálculo de IBS/CBS. As alíquotas serão fixadas por lei ordinária; para bens minerais extraídos há teto constitucional de 1% (CF, art. 153, §6º, III). O valor acima usa a alíquota informada no painel.</div>';
+ }
+
+ // ── B2B / B2C ──
+ const alqAtual=_zAlqAtual(rec,d);
+ const recLiq=rec/(1+alqAtual), precoBr=recLiq*(1+Z_TOT), varBr=(precoBr-rec)/rec*100;
+ const pB2B=1-pB2C, pressao=varBr*pB2C;
+ g('tbl-b2b').innerHTML='<thead><tr><th>Perfil</th><th>% Receita</th><th>Repasse do aumento</th><th>Efeito prático</th></tr></thead><tbody>'+
+  '<tr><td>B2B — cliente tomador de crédito</td><td class="nr">'+_zp(pB2B*100)+'</td><td class="nr">Creditável pelo adquirente</td><td>Neutro: o adquirente recupera o IBS/CBS; o repasse não onera sua decisão de compra.</td></tr>'+
+  '<tr><td>B2C — consumidor final</td><td class="nr">'+_zp(pB2C*100)+'</td><td class="nr rd">+'+_zp(varBr)+' no preço</td><td>Aumento efetivo de preço ao consumidor, sem crédito compensatório.</td></tr>'+
+  '<tr class="tr-tot"><td>Pressão real de preço (ponderada)</td><td class="nr">—</td><td class="nr rd">+'+_zp(pressao)+'</td><td>Reajuste médio efetivamente sentido pela carteira.</td></tr>'+
+  '</tbody>';
+ g('wrap-b2b').style.display='block';
 }
 
 // ── NOTAS INTERNAS ────────────────────────────────────────
@@ -898,8 +1068,8 @@ function gerarMemoriaCalculo() {
   const LIM_ADIC = 240000;
 
   if (regime.includes('Simples')) {
-    const { anexo, tabela } = identificarAnexo(d);
-    alqAt = calcAlqEfetiva(rec, tabela);
+    const _sn = _zSimples(rec, d);
+    alqAt = _sn.ok ? _sn.alq : 0;
     const impSim = rec * alqAt;
     irpj=0; csll=0; pisCofins=impSim; issVal=0;
   } else if (regime.includes('Presumido')) {
@@ -931,6 +1101,18 @@ function gerarMemoriaCalculo() {
   const precoBrut33 = recLiqBase*(1+TOT);
   const varBruto = (precoBrut33-rec)/rec*100;
   const impCaixa = (impTot33/12)*((prazoRec-prazoPag)/30);
+
+  // ── Reforma 360 — dados adicionais ──
+  const _isOn=(document.getElementById('sim_is')||{}).value==='sim';
+  const _isAliq=parseFloat((document.getElementById('sim_is_aliq')||{}).value)||0;
+  const _isBase=(parseFloat((document.getElementById('sim_is_base')||{}).value)||100)/100;
+  const _pB2C=parseFloat((document.getElementById('sim_b2c')||{}).value)||0;
+  const _cresc=parseFloat((document.getElementById('sim_cresc')||{}).value)||0;
+  const _isVal=_isOn?rec*_isBase*(_isAliq/100):0;
+  const _isNaBase=_isVal*TOT;
+  const _tSN=_zSimples(rec,d), _tLP=_zLP(rec,d), _tLR=_zLR(rec,d);
+  const _enq=_zEnq(rec,_cresc);
+  const _recLiqB=rec/(1+alqAt); const _precoBr=_recLiqB*(1+TOT); const _varBr=(_precoBr-rec)/rec*100;
 
   // ── Helpers ────────────────────────────────────────────────
   const fmt  = v => 'R$ ' + Number(v).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});
@@ -992,7 +1174,7 @@ function gerarMemoriaCalculo() {
         new Paragraph({spacing:{before:0,after:80},children:[TR2("ZARONI ADVOGADOS",{bold:true,size:28,color:VINHO})]}),
         new Paragraph({spacing:{before:0,after:320},children:[TR2("OAB/RJ 105.247  ·  Rio de Janeiro & São Paulo",{size:18,color:'6b5c4e'})]}),
         new Paragraph({spacing:{before:0,after:80},children:[TR2("Memória de Cálculo e Racional Metodológico",{bold:true,size:34,color:VINHO})]}),
-        new Paragraph({spacing:{before:0,after:320},children:[TR2("Diagnóstico de Impacto — Reforma Tributária (LC 214/2024)",{size:21,color:'6b5c4e'})]}),
+        new Paragraph({spacing:{before:0,after:320},children:[TR2("Zaroni Reforma 360° — Diagnóstico de Transição Tributária (LC 214/2024)",{size:21,color:'6b5c4e'})]}),
         Tab([2400,6626],[
           [Cel("Empresa",2400,{fill:CZ,bold:true,size:17}), Cel(d['01_Razão Social']||'—',6626,{size:17})],
           [Cel("CNPJ",2400,{fill:CZ,bold:true,size:17}), Cel(d['03_CNPJ']||'—',6626,{size:17})],
@@ -1116,6 +1298,55 @@ function gerarMemoriaCalculo() {
         P2("Fórmula: Impacto = (Carga anual ÷ 12) × (Prazo rec. − Prazo pag.) ÷ 30",{italic:true,color:'6b5c4e',size:17}),
         Sp(),
 
+        // 3.5 Enquadramento
+        Dv(), H1("3.5 Enquadramento no Simples Nacional"),
+        Tab([3400,2313,3313],[
+          [CelH("Parâmetro",3400),CelH("Valor",2313),CelH("Situação",3313)],
+          [Cel("Receita bruta (RBT12)",3400),Cel(fmt(rec),2313,{align:AlignmentType.RIGHT}),Cel(_enq.st,3313)],
+          [Cel("Sublimite ICMS/ISS",3400),Cel(fmt(3600000),2313,{align:AlignmentType.RIGHT}),Cel(rec<=3600000?"Dentro":"Excedido",3313)],
+          [Cel("Teto do Simples",3400),Cel(fmt(4800000),2313,{align:AlignmentType.RIGHT}),Cel(rec<=4800000?"Dentro":"Excedido — desenquadramento",3313)],
+        ]),
+        Sp(),
+
+        // 3.6 Comparativo entre regimes
+        Dv(), H1("3.6 Comparativo entre Regimes (carga atual)"),
+        Tab([3600,2713,2713],[
+          [CelH("Regime",3600),CelH("Carga anual",2713),CelH("% Receita",2713)],
+          [Cel("Simples Nacional"+(_tSN.ok?" ("+_tSN.label+")":""),3600),Cel(_tSN.ok?fmt(_tSN.total):_tSN.label,2713,{align:AlignmentType.RIGHT}),Cel(_tSN.ok?fmtP(_tSN.alq*100):"—",2713,{align:AlignmentType.CENTER})],
+          [Cel("Lucro Presumido",3600),Cel(fmt(_tLP.total),2713,{align:AlignmentType.RIGHT}),Cel(fmtP(_tLP.alq*100),2713,{align:AlignmentType.CENTER})],
+          [Cel("Lucro Real",3600),Cel(fmt(_tLR.total),2713,{align:AlignmentType.RIGHT}),Cel(fmtP(_tLR.alq*100),2713,{align:AlignmentType.CENTER})],
+        ]),
+        Sp(),
+        P2("Regime atual: "+regime+". No cenário pós-Reforma, o IBS/CBS (26,5%) incide igualmente sobre Lucro Presumido e Real; no Simples, aplica-se a decisão quanto ao regime híbrido de IBS/CBS.",{italic:true,color:'6b5c4e',size:17}),
+        Sp(),
+
+        // 3.7 Imposto Seletivo
+        Dv(), H1("3.7 Imposto Seletivo (IS)"),
+        ...((_isOn && _isAliq>0) ? [
+          Tab([4200,2413,2413],[
+            [CelH("Componente",4200),CelH("Base / Alíquota",2413),CelH("Valor anual",2413)],
+            [Cel("Receita sujeita ao IS",4200),Cel(fmtPct(_isBase*100),2413,{align:AlignmentType.CENTER}),Cel(fmt(rec*_isBase),2413,{align:AlignmentType.RIGHT})],
+            [Cel("Imposto Seletivo",4200),Cel(fmtP(_isAliq),2413,{align:AlignmentType.CENTER}),Cel(fmt(_isVal),2413,{align:AlignmentType.RIGHT})],
+            [Cel("Efeito do IS na base de IBS/CBS",4200),Cel("26,5%",2413,{align:AlignmentType.CENTER}),Cel(fmt(_isNaBase),2413,{align:AlignmentType.RIGHT})],
+            [CelS("Carga 2033 com IS",4200),CelS("—",2413,{align:AlignmentType.CENTER}),CelS(fmt(impLiq33+_isVal+_isNaBase),2413,{align:AlignmentType.RIGHT})],
+          ]),
+          Sp(),
+          P2("O IS é não creditável e integra a base de cálculo de IBS/CBS. Alíquotas a definir por lei ordinária; extração mineral com teto de 1% (CF, art. 153, §6º, III). Base legal: EC 132/2023; LC 214/2024.",{italic:true,color:'6b5c4e',size:17}),
+        ] : [
+          P2("Imposto Seletivo não incidente sobre a atividade declarada. O IS alcança apenas bens e serviços prejudiciais à saúde ou ao meio ambiente (EC 132/2023; LC 214/2024). Nenhum acréscimo às projeções.",{italic:true,color:'6b5c4e'}),
+        ]),
+        Sp(),
+
+        // 3.8 Perfil B2B / B2C
+        Dv(), H1("3.8 Impacto por Perfil de Venda — B2B / B2C"),
+        Tab([2800,1800,2213,2213],[
+          [CelH("Perfil",2800),CelH("% Receita",1800),CelH("Repasse",2213),CelH("Efeito",2213)],
+          [Cel("B2B (tomador de crédito)",2800),Cel(fmtPct(100-_pB2C),1800,{align:AlignmentType.CENTER}),Cel("Creditável",2213),Cel("Neutro ao adquirente",2213)],
+          [Cel("B2C (consumidor final)",2800),Cel(fmtPct(_pB2C),1800,{align:AlignmentType.CENTER}),Cel("+"+fmtP(_varBr),2213),Cel("Aumento efetivo de preço",2213)],
+          [CelS("Pressão real de preço",2800),CelS("—",1800,{align:AlignmentType.CENTER}),CelS("+"+fmtP(_varBr*_pB2C/100),2213),CelS("Reajuste médio da carteira",2213)],
+        ]),
+        Sp(),
+
         // 4. Ressalvas
         Dv(), H1("4. Limitações e Ressalvas Metodológicas"),
         ...[
@@ -1158,7 +1389,7 @@ function imprimirRelatorio() {
   const el = id => document.getElementById(id);
 
   if (el('ph-data'))    el('ph-data').textContent    = dataAtual;
-  if (el('ph-titulo'))  el('ph-titulo').textContent  = 'Diagnóstico de Impacto — Reforma Tributária';
+  if (el('ph-titulo'))  el('ph-titulo').textContent  = 'Zaroni Reforma 360° — Diagnóstico de Transição Tributária';
   if (el('ph-cliente')) {
     const empresa = d['01_Razão Social'] || '—';
     const cnpj    = d['03_CNPJ']         || '';
